@@ -5,6 +5,8 @@ import { renderGameBoard, DataForGameBoardRender } from "../canvasRender/gameboa
 import { INTERVAL_LENGTH } from "../constants";
 import gameboardObjectsImage from "../assets/gameboard-objects.gif"
 
+const VIRUS_INTERVAL: number = 500;
+
 interface StateFromProps {
     grid: GridSpaceData[][];
 }
@@ -26,17 +28,35 @@ class GameBoardComponent extends React.Component<StateFromProps, ComponentState>
         this.state = {spriteSheet: null}
     }
 
+    private spriteSheet: HTMLImageElement;
+    private previousTime: number;
+    private remainingVirusTime: number;
+    private virusIndex: number;
+
+    gameLoop(timeStamp: number) {
+        this.remainingVirusTime += timeStamp - this.previousTime;
+        this.virusIndex += Math.floor(this.remainingVirusTime / VIRUS_INTERVAL);
+        this.virusIndex %= 2;
+        this.remainingVirusTime %= VIRUS_INTERVAL;
+
+        let data: DataForGameBoardRender = {
+            virusAnimationIndex: this.virusIndex,
+            spriteSheet: this.spriteSheet,
+            grid: this.props.grid
+        };
+        renderGameBoard(this.context, data);
+
+        this.previousTime = timeStamp;
+
+        window.requestAnimationFrame(this.gameLoop.bind(this));
+    }
+
     componentDidMount() {
-        const self = this;
-        const spriteSheet: HTMLImageElement = document.getElementById("spriteSheet") as HTMLImageElement;
-        setInterval(() => {
-            let data: DataForGameBoardRender = {
-                ctx: self.context,
-                spriteSheet: spriteSheet,
-                grid: self.props.grid
-            };
-            renderGameBoard(data);
-        }, INTERVAL_LENGTH);
+        this.spriteSheet = document.getElementById("spriteSheet") as HTMLImageElement;
+        this.previousTime = 0;
+        this.remainingVirusTime = 0;
+        this.virusIndex = 0;
+        window.requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     render() {

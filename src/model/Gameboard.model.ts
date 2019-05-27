@@ -1,30 +1,17 @@
-import { TypeColor } from "./common.model"
-
-/**
- * Describes if the given grid space is connected to an adjacent grid space.
- * This is used to maintain connections for pills.
- */
-export enum ConnectorDirection {
-    NONE = 1,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
-}
+import { ObjectType, ColorType } from "./gameObject.model";
 
 /**
  * Data associated to a single grid space on our gameboard.
  */
 export class GridSpaceData {
-    color: TypeColor;
-    connector: ConnectorDirection;
-    isVirus: boolean
+    color: ColorType;
+    type: ObjectType;
 }
 
 /**
  * Describes the dimensions for a game board.
  */
-export interface GameBoardDimensions {
+export interface IGameBoardDimensions {
     width: number;
     height: number;
 }
@@ -32,11 +19,11 @@ export interface GameBoardDimensions {
 /**
  * Description of the gameboard grid
  */
-interface GameBoardGrid {
+interface IGameBoardGrid {
     grid: GridSpaceData[][];
 }
 
 /**
- * Data for a gameboard
+ * Data for a gameboard.
  */
-export type GameBoardData = GameBoardDimensions & GameBoardGrid;
+export type GameBoardData = IGameBoardDimensions & IGameBoardGrid;

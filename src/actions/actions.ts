@@ -1,6 +1,6 @@
-import { PillData } from '../model/PillData.model'
 import { GridPos } from '../model/common.model';
-import { GameBoardDimensions } from '../model/Gameboard.model';
+import { IGameBoardDimensions } from '../model/Gameboard.model';
+import { Pill } from '../model/gameObject.model';
 
 /**
  * Action Types
@@ -14,12 +14,12 @@ export const CLEAR_GAMEBOARD: string = 'CLEAR_GAMEBOARD';
 /**
  * Action Creators
  */
-export function createBuildGameboardAction(dimensions: GameBoardDimensions) {
+export function createBuildGameboardAction(dimensions: IGameBoardDimensions) {
     return { type: BUILD_GAMEBOARD, dimensions };
 }
 
-export function createAddPillToGameboardAction(pillData: PillData) {
-    return { type: ADD_PILL_TO_GAMEBOARD, pillData };
+export function createAddPillToGameboardAction(pill: Pill) {
+    return { type: ADD_PILL_TO_GAMEBOARD, pill };
 }
 
 export function createRemoveFromGameboardAction(gridPos: GridPos) {

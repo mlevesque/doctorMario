@@ -1,0 +1,34 @@
+{
+    "VIRUS": {
+        "RED": "red-virus-animation",
+        "YELLOW": "yellow-virus-animation",
+        "BLUE": "blue-virus-animation"
+    },
+
+    "PILL": {
+        "RED": {
+            "PILL_TOP": "red-pill-top",
+            "PILL_BOTTOM": "red-pill-bottom",
+            "PILL_LEFT": "red-pill-left",
+            "PILL_RIGHT": "red-pill-right",
+            "PILL_SINGLE": "red-pill-single",
+            "DESTROY": "red-pill-destroy"
+        },
+        "YELLOW": {
+            "PILL_TOP": "yellow-pill-top",
+            "PILL_BOTTOM": "yellow-pill-bottom",
+            "PILL_LEFT": "yellow-pill-left",
+            "PILL_RIGHT": "yellow-pill-right",
+            "PILL_SINGLE": "yellow-pill-single",
+            "DESTROY": "yellow-pill-destroy"
+        },
+        "BLUE": {
+            "PILL_TOP": "blue-pill-top",
+            "PILL_BOTTOM": "blue-pill-bottom",
+            "PILL_LEFT": "blue-pill-left",
+            "PILL_RIGHT": "blue-pill-right",
+            "PILL_SINGLE": "blue-pill-single",
+            "DESTROY": "blue-pill-destroy"
+        }
+    }
+}
