@@ -7,7 +7,7 @@ export const InitialGameState:GameState = {
         width: 5,
         height: 5,
         grid: [
-            [],
+            [{color: TypeColor.RED, connector: ConnectorDirection.NONE, isVirus: false}],
             [null, null, {color: TypeColor.RED, connector: ConnectorDirection.NONE, isVirus: false}]
         ]
     }
