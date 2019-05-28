@@ -88,7 +88,7 @@ export function renderGame( ctx: CanvasRenderingContext2D,
                             spriteSheet: HTMLImageElement,
                             params: IRenderGameParams) {
 
-    ctx.save()
+    ctx.save();
 
     // clear
     ctx.fillStyle = 'black';

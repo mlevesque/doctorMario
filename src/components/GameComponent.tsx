@@ -8,6 +8,7 @@ import { IDispatchGameActions } from "../model/IDispatchGameActions";
 import { createAddPillToGameboardAction, createDestroyObjectsInGameboardAction, createPurgeDestroyObjectsAction } from "../actions/GameBoard.actions";
 import { Table } from "../model/Table";
 import { updateGame } from "../gameLogic/updateGame";
+import { createAnimationUpdateAction } from "../actions/Animation.actions";
 
 const VIRUS_INTERVAL: number = 300;
 
@@ -17,9 +18,10 @@ const mapStateToProps = (state: IGameState): IGameState => {
 
 const mapDispatchToProps = (dispatch: any): IDispatchGameActions => {
     return {
-        addPillToGameboard: (pill: IPill) => {createAddPillToGameboardAction(pill)},
-        markDestroyObjects: (table: Table<boolean>) => {createDestroyObjectsInGameboardAction(table)},
-        purgeDestroyObjects: () => {createPurgeDestroyObjectsAction()},
+        updateAnimation: (deltaTime: number) => {dispatch(createAnimationUpdateAction(deltaTime))},
+        addPillToGameboard: (pill: IPill) => {dispatch(createAddPillToGameboardAction(pill))},
+        markDestroyObjects: (table: Table<boolean>) => {dispatch(createDestroyObjectsInGameboardAction(table))},
+        purgeDestroyObjects: () => {dispatch(createPurgeDestroyObjectsAction())},
     }
 }
 
@@ -29,6 +31,7 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
         super(props);
     }
 
+    private renderContext: CanvasRenderingContext2D;
     private spriteSheet: HTMLImageElement;
     private prevTimestamp: number;
 
@@ -36,14 +39,14 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
         return {
             gameboard: state.gameboard,
             pill: state.floatingPill.pill,
-            virusAnimationFrame: 0,
+            virusAnimationFrame: state.virusGameboardAnimation.frameIndex,
         }
     }
 
     gameLoop(timeStamp: number) {
         let dt: number = timeStamp - this.prevTimestamp;
         updateGame(dt, this.props, this.props);
-        renderGame(this.context, this.spriteSheet, this.mapStateToRenderParams(this.props));
+        renderGame(this.renderContext, this.spriteSheet, this.mapStateToRenderParams(this.props));
         this.prevTimestamp = timeStamp;
         window.requestAnimationFrame(this.gameLoop.bind(this));
     }
@@ -62,6 +65,7 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
      */
     componentDidMount() {
         this.prevTimestamp = 0;
+        this.renderContext = (document.getElementById("gameCanvas") as HTMLCanvasElement).getContext("2d");
         this.spriteSheet = document.getElementById("spriteSheet") as HTMLImageElement;
         window.requestAnimationFrame(this.gameLoop.bind(this));
     }
@@ -74,7 +78,7 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
             <div>
                 <div>Test</div>
                 <img id="spriteSheet" src={gameboardObjectsImage} hidden={true} />
-                <canvas ref={(c) => this.context = c.getContext('2d')} width={640} height={640} />
+                <canvas id="gameCanvas" width={640} height={640} />
             </div>
         )
     }
