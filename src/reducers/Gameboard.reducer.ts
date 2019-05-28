@@ -1,8 +1,9 @@
 import { GameBoardData, GridSpaceData, IGameBoardDimensions } from "../model/Gameboard.model";
 import { ADD_PILL_TO_GAMEBOARD, REMOVE_FROM_GAMEBOARD, CLEAR_GAMEBOARD, BUILD_GAMEBOARD } from "../actions/actions";
 import { InitialGameState } from "./InitialGameState";
-import { Pill } from "../model/gameObject.model";
+import { Pill, ColorType, ObjectType } from "../model/gameObject.model";
 import { GridPos } from "../model/common.model";
+import { GameBoardBuildData } from "../actions/model/GameboardActions.model";
 
 /**
  * Builds grid with given dimensions and returns it.
@@ -10,7 +11,11 @@ import { GridPos } from "../model/common.model";
  * @param height 
  */
 function allocateGrid(width: number, height: number): GridSpaceData[][] {
-    return new Array(height).fill(new Array(width).fill(null));
+    let newGrid: GridSpaceData[][] = new Array<GridSpaceData[]>(height);
+    for (let y = 0; y < height; ++y) {
+        newGrid[y] = new Array<GridSpaceData>(width);
+    }
+    return newGrid;
 }
 
 /**
@@ -18,24 +23,34 @@ function allocateGrid(width: number, height: number): GridSpaceData[][] {
  * @param state 
  * @param payload 
  */
-export function gameboardReducer(state: GameBoardData = InitialGameState.gameboard, payload: any) {
+export function gameboardReducer(state: GameBoardData = InitialGameState.gameboard, action: any) {
     let newState: GameBoardData = null;
-    switch (payload.type) {
+    switch (action.type) {
 
 
         case BUILD_GAMEBOARD:
-            let dimensions: IGameBoardDimensions = payload as IGameBoardDimensions;
+            let board: GameBoardBuildData<string> = action.payload as GameBoardBuildData<string>;
             newState = {
-                width: dimensions.width,
-                height: dimensions.height,
-                grid: allocateGrid(dimensions.width, dimensions.height)
+                width: board.width,
+                height: board.height,
+                grid: allocateGrid(board.width, board.height)
+            }
+            for (let y = 0; y < board.height; ++y) {
+                for (let x = 0; x < board.width; ++x) {
+                    if (board.getValue(x, y) != null) {
+                        newState.grid[y][x] = {color: (board.getValue(x, y) as ColorType), type: ObjectType.VIRUS};
+                    }
+                    else {
+                        newState.grid[y][x] = null;
+                    }
+                }
             }
             return newState;
 
         
         case ADD_PILL_TO_GAMEBOARD:
             // convert action payload to pill data
-            let pillData: Pill = payload as Pill;
+            let pillData: Pill = action.payload as Pill;
 
             // set up data to be added to grid
             let firstHalf: GridSpaceData = pillData.parts.length > 0 
@@ -73,7 +88,7 @@ export function gameboardReducer(state: GameBoardData = InitialGameState.gameboa
 
 
         case REMOVE_FROM_GAMEBOARD:
-            let gridPos: GridPos = payload as GridPos;
+            let gridPos: GridPos = action.payload as GridPos;
             newState = Object.assign({}, state);
             newState.grid = state.grid.map( (row: GridSpaceData[], y:Number) => {
                 return row.map( (value: GridSpaceData, x: Number) => {
@@ -93,7 +108,7 @@ export function gameboardReducer(state: GameBoardData = InitialGameState.gameboa
             newState.grid = allocateGrid(newState.width, newState.height);
             return newState;
 
-            
+
         default:
             return state;
     }

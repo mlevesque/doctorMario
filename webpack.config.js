@@ -23,7 +23,7 @@ module.exports = {
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
 
-            //{test: /\.(jpe?g|png|gif|svg)$/i, loader: "file-loader?name=/images/[name].[ext]"}
+            // All images will be handled by 'file-loader'.
             {
                 test: /\.(png|jpg|gif)$/,
                 use: [

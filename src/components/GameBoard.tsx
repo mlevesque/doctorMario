@@ -4,8 +4,12 @@ import { connect } from "react-redux";
 import { renderGameBoard, DataForGameBoardRender } from "../canvasRender/gameboard.render";
 import { INTERVAL_LENGTH } from "../constants";
 import gameboardObjectsImage from "../assets/gameboard-objects.gif"
+import { createBuildGameboardAction } from "../actions/actions";
+import { GameBoardBuildData } from "../actions/model/GameboardActions.model";
+import { ColorType } from "../model/gameObject.model";
+import { buildVirusGameboard } from "../virusPropagator";
 
-const VIRUS_INTERVAL: number = 500;
+const VIRUS_INTERVAL: number = 300;
 
 interface StateFromProps {
     grid: GridSpaceData[][];
@@ -64,7 +68,7 @@ class GameBoardComponent extends React.Component<StateFromProps, ComponentState>
             <div>
                 <div>Test</div>
                 <img id="spriteSheet" src={gameboardObjectsImage} hidden={true} />
-                <canvas ref={(c) => this.context = c.getContext('2d')} width={640} height={425} />
+                <canvas ref={(c) => this.context = c.getContext('2d')} width={640} height={640} />
             </div>
         )
     }

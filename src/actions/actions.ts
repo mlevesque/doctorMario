@@ -1,6 +1,7 @@
 import { GridPos } from '../model/common.model';
 import { IGameBoardDimensions } from '../model/Gameboard.model';
-import { Pill } from '../model/gameObject.model';
+import { Pill, ColorType } from '../model/gameObject.model';
+import { GameBoardBuildData } from './model/GameboardActions.model';
 
 /**
  * Action Types
@@ -14,16 +15,16 @@ export const CLEAR_GAMEBOARD: string = 'CLEAR_GAMEBOARD';
 /**
  * Action Creators
  */
-export function createBuildGameboardAction(dimensions: IGameBoardDimensions) {
-    return { type: BUILD_GAMEBOARD, dimensions };
+export function createBuildGameboardAction(data: GameBoardBuildData<string>) {
+    return { type: BUILD_GAMEBOARD, payload:data };
 }
 
 export function createAddPillToGameboardAction(pill: Pill) {
-    return { type: ADD_PILL_TO_GAMEBOARD, pill };
+    return { type: ADD_PILL_TO_GAMEBOARD, payload:pill };
 }
 
 export function createRemoveFromGameboardAction(gridPos: GridPos) {
-    return { type: REMOVE_FROM_GAMEBOARD, gridPos };
+    return { type: REMOVE_FROM_GAMEBOARD, payload:gridPos };
 }
 
 export function createClearGameboardAction() {
