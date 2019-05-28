@@ -1,9 +1,9 @@
-import { ObjectType, ColorType } from "./gameObject.model";
+import { ColorType, ObjectType } from "./enums";
 
 /**
  * Data associated to a single grid space on our gameboard.
  */
-export class GridSpaceData {
+export interface IGridSpace {
     color: ColorType;
     type: ObjectType;
 }
@@ -11,7 +11,7 @@ export class GridSpaceData {
 /**
  * Describes the dimensions for a game board.
  */
-export interface IGameBoardDimensions {
+export interface IGridDimensions {
     width: number;
     height: number;
 }
@@ -20,10 +20,10 @@ export interface IGameBoardDimensions {
  * Description of the gameboard grid
  */
 interface IGameBoardGrid {
-    grid: GridSpaceData[][];
+    grid: IGridSpace[][];
 }
 
 /**
  * Data for a gameboard.
  */
-export type GameBoardData = IGameBoardDimensions & IGameBoardGrid;
+export type IGameBoard = IGridDimensions & IGameBoardGrid;

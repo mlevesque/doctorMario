@@ -1,11 +1,14 @@
-import { IGameboardObjectLookupJson, IPillSpriteColorSet } from "./model/IGameboardObjectLookupJson.model";
-import { ISpriteAnimation, ISpriteAnimationJson } from "./model/ISpriteAnimationJson.model";
-import { ISprite, ISpriteJson } from "./model/ISpriteJson.model";
-import { ColorType, ObjectType } from "../model/gameObject.model";
+import gameboardObjectLookupJson from '../data/gameboard-objectLookup.json';
+import animationJson from '../data/gameboard-animations.json';
+import spriteJson from '../data/gameboard-sprites.json';
 
-import gameboardObjectLookupJson from './data/gameboard-objectLookup.json';
-import animationJson from './data/gameboard-animations.json';
-import spriteJson from './data/gameboard-sprites.json';
+import { ColorType, ObjectType } from '../model/enums.js';
+import { IGameboardObjectLookupJson, 
+         IPillSpriteColorSet, 
+         ISpriteAnimation, 
+         ISpriteAnimationJson, 
+         ISprite, 
+         ISpriteJson } from '../model/JsonScemas.js';
 
 /**
  * Returns the animation id for a virus of the given color from Json data.

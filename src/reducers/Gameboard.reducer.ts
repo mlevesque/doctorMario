@@ -1,19 +1,19 @@
-import { GameBoardData, GridSpaceData, IGameBoardDimensions } from "../model/Gameboard.model";
-import { ADD_PILL_TO_GAMEBOARD, REMOVE_FROM_GAMEBOARD, CLEAR_GAMEBOARD, BUILD_GAMEBOARD } from "../actions/actions";
+import { IGameBoard, IGridSpace, IGridDimensions } from "../model/IGameBoard";
 import { InitialGameState } from "./InitialGameState";
-import { Pill, ColorType, ObjectType } from "../model/gameObject.model";
-import { GridPos } from "../model/common.model";
-import { GameBoardBuildData } from "../actions/model/GameboardActions.model";
+import { Table } from "../model/Table";
+import { IPill, IGameObject } from "../model/IGameState";
+import { ColorType, ObjectType } from "../model/enums";
+import { GameboardAction } from "../actions/GameBoard.actions";
 
 /**
  * Builds grid with given dimensions and returns it.
  * @param width 
  * @param height 
  */
-function allocateGrid(width: number, height: number): GridSpaceData[][] {
-    let newGrid: GridSpaceData[][] = new Array<GridSpaceData[]>(height);
+function allocateGrid(width: number, height: number): IGridSpace[][] {
+    let newGrid: IGridSpace[][] = new Array<IGridSpace[]>(height);
     for (let y = 0; y < height; ++y) {
-        newGrid[y] = new Array<GridSpaceData>(width);
+        newGrid[y] = new Array<IGridSpace>(width);
     }
     return newGrid;
 }
@@ -23,13 +23,14 @@ function allocateGrid(width: number, height: number): GridSpaceData[][] {
  * @param state 
  * @param payload 
  */
-export function gameboardReducer(state: GameBoardData = InitialGameState.gameboard, action: any) {
-    let newState: GameBoardData = null;
+export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard, action: any): IGameBoard {
+    let newState: IGameBoard = null;
     switch (action.type) {
 
 
-        case BUILD_GAMEBOARD:
-            let board: GameBoardBuildData<string> = action.payload as GameBoardBuildData<string>;
+        // ============================================================
+        case GameboardAction.BUILD_GAMEBOARD:
+            let board: Table<string> = action.payload as Table<string>;
             newState = {
                 width: board.width,
                 height: board.height,
@@ -47,63 +48,92 @@ export function gameboardReducer(state: GameBoardData = InitialGameState.gameboa
             }
             return newState;
 
-        
-        case ADD_PILL_TO_GAMEBOARD:
-            // convert action payload to pill data
-            let pillData: Pill = action.payload as Pill;
 
-            // set up data to be added to grid
-            let firstHalf: GridSpaceData = pillData.parts.length > 0 
-                ? {color: pillData.parts[0].color, type: pillData.parts[0].type}
-                : null;
-            let secondHalf: GridSpaceData = pillData.parts.length > 1
-                ? {color: pillData.parts[1].color, type: pillData.parts[1].type}
-                : null;
-            let firstPos: GridPos = firstHalf != null ? pillData.parts[0].position : {x:-1, y:-1};
-            let secondPos: GridPos = secondHalf != null ? pillData.parts[1].position : {x:-1, y:-1};
+        // ============================================================
+        case GameboardAction.ADD_PILL_TO_GAMEBOARD:
+            // get pill data
+            let pillData: IPill = action.payload as IPill;
 
-            // build new grid - find where to add the pill data
+            // copy pill parts and transform their positions from Object space to Gameboard space
+            let parts: IGameObject[] = pillData.parts.map((value: IGameObject) => {
+                let gb: IGameObject = Object.assign({}, value);
+                gb.position.x += pillData.position.x;
+                gb.position.y += pillData.position.y;
+                return gb;
+            });
+
+            // we need to handle the case where a pill may be straddling the top of the gameboard
+            // in this case, we want to change the object types to single pills because one of
+            // them will be lost
+            let convertToSingular: boolean = false;
+            parts.forEach((part: IGameObject) => {
+                if (part.position.y < 0) {
+                    convertToSingular = true;
+                }
+            });
+            if (convertToSingular) {
+                parts.forEach((part: IGameObject) => {
+                    part.type = ObjectType.PILL_SINGLE;
+                });
+            }
+
+            // build new grid and add the pill parts to the right positions
             newState = Object.assign({}, state);
-            newState.grid = state.grid.map( (row: GridSpaceData[], y: number) => {
-                return row.map( (value: GridSpaceData, x: number) => {
-                    
-                    // check if we add first half here
-                    if (firstPos.x == x && firstPos.y == y) {
-                        return firstHalf;
+            newState.grid = state.grid.map( (row: IGridSpace[], y: number) => {
+                return row.map( (value: IGridSpace, x: number) => {
+                    let newSpace: IGridSpace = null;
+                    pillData.parts.forEach((part: IGameObject) => {
+                        if (part.position.x == x && part.position.y == y) {
+                            newSpace = {
+                                color: part.color,
+                                type: part.type
+                            };
+                        }
+                    });
+                    if (newSpace == null) {
+                        newSpace = value == null ? null : Object.assign({}, value);
                     }
-
-                    // check if we add second half here
-                    else if (secondPos.x == x && secondPos.y == y) {
-                        return secondHalf;
-                    }
-
-                    // otherwise retunr original
-                    else {
-                        return value;
-                    }
-
+                    return newSpace;
                 });
             });
             return newState;
 
 
-        case REMOVE_FROM_GAMEBOARD:
-            let gridPos: GridPos = action.payload as GridPos;
+        // ============================================================
+        case GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD:
+            let destroyTable: Table<boolean> = action.payload as Table<boolean>;
             newState = Object.assign({}, state);
-            newState.grid = state.grid.map( (row: GridSpaceData[], y:Number) => {
-                return row.map( (value: GridSpaceData, x: Number) => {
-                    if (gridPos.x == x && gridPos.y == y) {
+            newState.grid = state.grid.map( (row: IGridSpace[], y: number) => {
+                return row.map( (value: IGridSpace, x: number) => {
+                    if (value == null) {
+                        return null;
+                    }
+                    let newSpace: IGridSpace = Object.assign({}, value);
+                    newSpace.type = ObjectType.DESTROYED;
+                    return newSpace;
+                });
+            });
+            return newState;
+
+
+        // ============================================================
+        case GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD:
+            newState = Object.assign({}, state);
+            newState.grid = state.grid.map( (row: IGridSpace[], y: number) => {
+                return row.map( (value: IGridSpace, x: number) => {
+                    if (value != null && value.type == ObjectType.DESTROYED) {
                         return null;
                     }
                     else {
-                        return value;
+                        return Object.assign({}, )
                     }
                 });
             });
             return newState;
 
 
-        case CLEAR_GAMEBOARD:
+        // ============================================================
+        case GameboardAction.CLEAR_GAMEBOARD:
             newState = Object.assign({}, state);
             newState.grid = allocateGrid(newState.width, newState.height);
             return newState;

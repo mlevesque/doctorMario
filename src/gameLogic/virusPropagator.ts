@@ -1,7 +1,6 @@
-import { number } from "prop-types";
-import { GameBoardBuildData } from "./actions/model/GameboardActions.model";
-import { GridPos } from "./model/common.model";
-import { ColorType } from "./model/gameObject.model";
+import { Table } from "../model/Table";
+import { ColorType } from "../model/enums";
+import { IGridPos } from "../model/IGameState";
 
 const FAIL_LIMIT: number = 5;
 const NUMBER_OF_RESTRICTED_ROWS: number = 3;
@@ -23,14 +22,14 @@ interface IVirusDataPair {
     colorMask: ColorMask;
 }
 
-function randomlyChooseGridSpace(width: number, height: number): GridPos {
+function randomlyChooseGridSpace(width: number, height: number): IGridPos {
     return {
         x: Math.floor(Math.random() * width),
         y: NUMBER_OF_RESTRICTED_ROWS + Math.floor(Math.random() * (height - NUMBER_OF_RESTRICTED_ROWS))
     }
 }
 
-function isAvailable(maskGrid: GameBoardBuildData<number>, width: number, height: number, pos: GridPos): boolean {
+function isAvailable(maskGrid: Table<number>, width: number, height: number, pos: IGridPos): boolean {
     return pos.x >= 0
         && pos.y > NUMBER_OF_RESTRICTED_ROWS
         && pos.x < width
@@ -38,8 +37,8 @@ function isAvailable(maskGrid: GameBoardBuildData<number>, width: number, height
         && maskGrid.getValue(pos.x, pos.y) != ColorMask.ALL;
 }
 
-function findAvailable(maskGrid: GameBoardBuildData<number>, width: number, height: number, startPos: GridPos): GridPos {
-    let potentialPos: GridPos = Object.assign({}, startPos);
+function findAvailable(maskGrid: Table<number>, width: number, height: number, startPos: IGridPos): IGridPos {
+    let potentialPos: IGridPos = Object.assign({}, startPos);
     let step: number = 1;
     let direction: number = 0;
     let attempts: number = 0;
@@ -88,13 +87,13 @@ function chooseVirus(mask: number): IVirusDataPair {
     return list[index];
 }
 
-export function buildVirusGameboard(width: number, height: number, redCount: number, yellowCount: number, blueCount: number): GameBoardBuildData<string> {
+export function buildVirusGameboard(width: number, height: number, redCount: number, yellowCount: number, blueCount: number): Table<ColorType> {
     let remainingRed: number = Math.max(0, redCount);
     let remainingYellow: number = Math.max(0, yellowCount);
     let remainingBlue: number = Math.max(0, blueCount);
 
-    let gameboard: GameBoardBuildData<string> = new GameBoardBuildData<string>(width, height, '');
-    let maskBoard: GameBoardBuildData<number> = new GameBoardBuildData<number>(width, height, 0);
+    let gameboard: Table<ColorType> = new Table<ColorType>(width, height);
+    let maskBoard: Table<number> = new Table<number>(width, height);
 
     // fail count keeps track of how many iteractions we fail to add a virus to the grid
     let failCount: number = 0;
@@ -103,7 +102,7 @@ export function buildVirusGameboard(width: number, height: number, redCount: num
     while ((remainingRed > 0 || remainingYellow > 0 || remainingBlue > 0) && failCount < FAIL_LIMIT) {
 
         // get position
-        let pos: GridPos = randomlyChooseGridSpace(width, height);
+        let pos: IGridPos = randomlyChooseGridSpace(width, height);
         pos = findAvailable(maskBoard, width, height, pos);
         if (pos == null) {
             failCount++;
