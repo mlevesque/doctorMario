@@ -28,3 +28,25 @@ export function hasPillLanded(pill: IPill, gameboard: IGameBoard): boolean {
     });
     return result;
 }
+
+function canPillSlide(pill: IPill, gameboard: IGameBoard, direction: number): boolean {
+    let result: boolean = true;
+    pill.parts.forEach((part: IGameObject) => {
+        let pos: IGridPos = {
+            x: pill.position.x + part.position.x + direction,
+            y: pill.position.y + part.position.y,
+        }
+        if (isCollision(pos, gameboard)) {
+            result = false;
+        }
+    });
+    return result;
+}
+
+export function canPillSlideLeft(pill: IPill, gameboard: IGameBoard): boolean {
+    return canPillSlide(pill, gameboard, -1);
+}
+
+export function canPillSlideRight(pill: IPill, gameboard: IGameBoard): boolean {
+    return canPillSlide(pill, gameboard, 1);
+}

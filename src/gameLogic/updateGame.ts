@@ -1,6 +1,6 @@
-import { IGameState } from "../model/IGameState";
+import { IGameState, IPill } from "../model/IGameState";
 import { IDispatchGameActions } from "../model/IDispatchGameActions";
-import { hasPillLanded } from "./collisionChecks";
+import { hasPillLanded, canPillSlideLeft, canPillSlideRight } from "./collisionChecks";
 import { generateFloatingPill } from "./generatePill";
 import { IInputActions } from "../model/IInputActions";
 
@@ -9,14 +9,16 @@ export function updateGame(dt: number, inputData:IInputActions, gameState:IGameS
     dispatches.updateAnimation(dt);
 
     if (gameState.floatingPill.pill != null) {
+        let pill: IPill = gameState.floatingPill.pill;
+
         // perform input for rotation
         if (inputData.rotate) {
             dispatches.rotatePill(gameState.gameboard);
         }
-        if (inputData.left) {
+        if (inputData.left && canPillSlideLeft(pill, gameState.gameboard)) {
             dispatches.slidePill(-1);
         }
-        else if (inputData.right) {
+        else if (inputData.right && canPillSlideRight(pill, gameState.gameboard)) {
             dispatches.slidePill(1);
         }
 
@@ -25,8 +27,8 @@ export function updateGame(dt: number, inputData:IInputActions, gameState:IGameS
         let shouldSetNewPill: boolean = false;
         if (updateCount > 0) {
             // check if pill has rested, then place it
-            if (hasPillLanded(gameState.floatingPill.pill, gameState.gameboard)) {
-                dispatches.addPillToGameboard(gameState.floatingPill.pill);
+            if (hasPillLanded(pill, gameState.gameboard)) {
+                dispatches.addPillToGameboard(pill);
                 shouldSetNewPill = true;
             }
         }
