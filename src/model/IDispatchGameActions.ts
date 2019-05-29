@@ -7,6 +7,7 @@ export interface IDispatchGameActions {
     setPill: (pill: IPill) => void;
     rotatePill: (gameboard: IGameBoard) => void;
     slidePill: (position: number) => void;
+    dropPillInterval: (interval: number) => void;
     dropPill: (position: number) => void;
     addPillToGameboard: (pill: IPill) => void;
     markDestroyObjects: (table: Table<boolean>) => void;

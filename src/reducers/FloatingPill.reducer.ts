@@ -87,8 +87,15 @@ export function floatingPillReducer(state: IFloatingPill = InitialGameState.floa
 
         // ============================================================
         case FloatingPillAction.SET_DROP_INTERVAL:
+            let interval: number = action.payload as number;
+
+            // calculate the difference that the interval will change
+            // Then subtract this difference from the elapsed time.
+            let diff: number = state.dropInterval - interval;
+
             newFloatingPill = Object.assign({}, state);
-            newFloatingPill.dropInterval = action.payload as number;
+            newFloatingPill.dropInterval = interval;
+            newFloatingPill.elapsedTime = Math.max(state.elapsedTime - diff, 0);
             return newFloatingPill;
     }
     return state;

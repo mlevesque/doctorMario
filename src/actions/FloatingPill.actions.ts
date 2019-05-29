@@ -26,6 +26,6 @@ export function createFloatingPillDropAction(position: number): AnyAction {
 export function createFloatingPillRotateAction(gameboard: IGameBoard): AnyAction {
     return { type: FloatingPillAction.ROTATE, payload: gameboard };
 }
-export function createFloatingPillSetDropIntervalAction(value: number): AnyAction {
-    return { type: FloatingPillAction.SET_DROP_INTERVAL, payload: value };
+export function createFloatingPillSetDropIntervalAction(interval: number): AnyAction {
+    return { type: FloatingPillAction.SET_DROP_INTERVAL, payload: interval };
 }

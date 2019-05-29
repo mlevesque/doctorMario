@@ -15,6 +15,8 @@ export function updateGame(dt: number, inputData:IInputActions, gameState:IGameS
         if (inputData.rotate) {
             dispatches.rotatePill(gameState.gameboard);
         }
+
+        // perform input for sliding
         if (inputData.left && canPillSlideLeft(pill, gameState.gameboard)) {
             dispatches.slidePill(-1);
         }
@@ -22,20 +24,25 @@ export function updateGame(dt: number, inputData:IInputActions, gameState:IGameS
             dispatches.slidePill(1);
         }
 
+        // perform input for dropping
+        if (inputData.down) {
+            dispatches.dropPillInterval(100);
+        }
+        else {
+            dispatches.dropPillInterval(800);
+        }
+
         // drop pill
         let updateCount: number = Math.floor(gameState.floatingPill.elapsedTime / gameState.floatingPill.dropInterval);
         let shouldSetNewPill: boolean = false;
-        if (updateCount > 0) {
+        while (updateCount > 0) {
             // check if pill has rested, then place it
             if (hasPillLanded(pill, gameState.gameboard)) {
                 dispatches.addPillToGameboard(pill);
                 shouldSetNewPill = true;
             }
-        }
-
-        // drop pill if there are still updates to perform
-        if (updateCount > 0) {
-            dispatches.dropPill(updateCount);
+            dispatches.dropPill(1);
+            updateCount--;
         }
 
         // check if we should set a new pill

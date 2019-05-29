@@ -9,7 +9,7 @@ import { createAddPillToGameboardAction, createDestroyObjectsInGameboardAction, 
 import { Table } from "../model/Table";
 import { updateGame } from "../gameLogic/updateGame";
 import { createAnimationUpdateAction } from "../actions/Animation.actions";
-import { createFloatingPillSetPillAction, createFloatingPillSlideAction, createFloatingPillDropAction, createFloatingPillRotateAction } from "../actions/FloatingPill.actions";
+import { createFloatingPillSetPillAction, createFloatingPillSlideAction, createFloatingPillDropAction, createFloatingPillRotateAction, createFloatingPillSetDropIntervalAction } from "../actions/FloatingPill.actions";
 import { IInputActions } from "../model/IInputActions";
 import { IGameBoard } from "../model/IGameBoard";
 
@@ -23,6 +23,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchGameActions => {
         setPill: (pill: IPill) => {dispatch(createFloatingPillSetPillAction(pill))},
         rotatePill: (gameboard: IGameBoard) => {dispatch(createFloatingPillRotateAction(gameboard))},
         slidePill: (position: number) => {dispatch(createFloatingPillSlideAction(position))},
+        dropPillInterval: (interval: number) => {dispatch(createFloatingPillSetDropIntervalAction(interval))},
         dropPill: (position: number) => {dispatch(createFloatingPillDropAction(position))},
         addPillToGameboard: (pill: IPill) => {dispatch(createAddPillToGameboardAction(pill))},
         markDestroyObjects: (table: Table<boolean>) => {dispatch(createDestroyObjectsInGameboardAction(table))},
@@ -34,6 +35,12 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
 
     constructor(props: any) {
         super(props);
+        this.inputActions = {
+            rotate: false,
+            left: false,
+            right: false,
+            down: false,
+        }
     }
 
     private inputActions: IInputActions;
@@ -41,19 +48,35 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
     private spriteSheet: HTMLImageElement;
     private prevTimestamp: number;
 
-    resetInputActions():void {
-        this.inputActions = {
-            rotate: false,
-            left: false,
-            right: false,
-        };
+    resetInputPressActions():void {
+        this.inputActions.rotate = false;
+        this.inputActions.left = false;
+        this.inputActions.right = false;
     }
 
-    handleInput(e:KeyboardEvent):void {
-        this.inputActions = {
-            rotate: e.code == "Space",
-            left: e.code == "ArrowLeft",
-            right: e.code == "ArrowRight",
+    onKeyDown(e:KeyboardEvent):void {
+        switch(e.code) {
+            case "Space":
+            case "ArrowUp":
+                this.inputActions.rotate = true;
+                break;
+            case "ArrowLeft":
+                this.inputActions.left = true;
+                break;
+            case "ArrowRight":
+                this.inputActions.right = true;
+                break;
+            case "ArrowDown":
+                this.inputActions.down = true;
+                break;
+        }
+    }
+
+    onKeyUp(e:KeyboardEvent): void {
+        switch(e.code) {
+            case "ArrowDown":
+                this.inputActions.down = false;
+                break;
         }
     }
 
@@ -70,7 +93,7 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
         updateGame(dt, this.inputActions, this.props, this.props);
         renderGame(this.renderContext, this.spriteSheet, this.mapStateToRenderParams(this.props));
         this.prevTimestamp = timeStamp;
-        this.resetInputActions();
+        this.resetInputPressActions();
         window.requestAnimationFrame(this.gameLoop.bind(this));
     }
 
@@ -87,10 +110,10 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
      * When the components mount, begin the game loop.
      */
     componentDidMount() {
-        let canvas: HTMLCanvasElement = document.getElementById("gameCanvas") as HTMLCanvasElement;
-        this.resetInputActions();
-        document.addEventListener('keydown', this.handleInput.bind(this), true);
+        document.addEventListener('keydown', this.onKeyDown.bind(this), true);
+        document.addEventListener('keyup', this.onKeyUp.bind(this), true);
         this.prevTimestamp = 0;
+        let canvas: HTMLCanvasElement = document.getElementById("gameCanvas") as HTMLCanvasElement;
         this.renderContext = canvas.getContext("2d");
         this.spriteSheet = document.getElementById("spriteSheet") as HTMLImageElement;
         window.requestAnimationFrame(this.gameLoop.bind(this));
