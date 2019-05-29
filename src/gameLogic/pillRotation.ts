@@ -56,10 +56,10 @@ function __setRotationForPill(pill: IPill, rotation: PillRotation): void {
             part2.type = ObjectType.PILL_RIGHT;
             break;
         case PillRotation.VERT:
-            part1.position = {x:0, y:1}
+            part1.position = {x:0, y:-1}
             part2.position = {x:0, y:0}
-            part1.type = ObjectType.PILL_BOTTOM;
-            part2.type = ObjectType.PILL_TOP;
+            part1.type = ObjectType.PILL_TOP;
+            part2.type = ObjectType.PILL_BOTTOM;
             break;
         case PillRotation.HORIZ_FLIPPED:
             part1.position = {x:1, y:0}
@@ -69,9 +69,9 @@ function __setRotationForPill(pill: IPill, rotation: PillRotation): void {
             break;
         case PillRotation.VERT_FLIPPED:
             part1.position = {x:0, y:0}
-            part2.position = {x:0, y:1}
-            part1.type = ObjectType.PILL_TOP;
-            part2.type = ObjectType.PILL_BOTTOM;
+            part2.position = {x:0, y:-1}
+            part1.type = ObjectType.PILL_BOTTOM;
+            part2.type = ObjectType.PILL_TOP;
             break;
     }
 
