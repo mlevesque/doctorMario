@@ -30,11 +30,17 @@ export interface IPill {
 export interface IFloatingPill {
     pill: IPill;
     dropInterval: number;
+    elapsedTime: number;
 }
 
 export interface IVirusGameboardAnimation {
     elapsedTime: number;
     frameIndex: number;
+}
+
+export interface IFlowState {
+    flowQueue: FlowState[];
+    elapsedTime: number;
 }
 
 /**

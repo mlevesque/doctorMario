@@ -12,7 +12,8 @@ export const InitialGameState:IGameState = {
     },
     floatingPill: {
         pill: null,
-        dropInterval: 1000
+        dropInterval: 1000,
+        elapsedTime: 0
     },
     virusGameboardAnimation: {
         elapsedTime: 0,

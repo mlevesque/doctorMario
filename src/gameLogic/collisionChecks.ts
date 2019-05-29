@@ -1,4 +1,4 @@
-import { IGridPos } from "../model/IGameState";
+import { IGridPos, IPill, IGameObject } from "../model/IGameState";
 import { IGameBoard } from "../model/IGameBoard";
 
 /**
@@ -14,4 +14,17 @@ export function isCollision(pos: IGridPos, gameboard: IGameBoard): boolean {
         || pos.x >= gameboard.width 
         || pos.y >= gameboard.height
         || gameboard.grid[pos.y][pos.x] != null;
+}
+
+export function hasPillLanded(pill: IPill, gameboard: IGameBoard): boolean {
+    let result: boolean = false;
+    pill.parts.forEach((part: IGameObject) => {
+        let pos = {
+            x: part.position.x + pill.position.x, 
+            y: part.position.y + pill.position.y + 1};
+        if (isCollision(pos, gameboard)) {
+            result = true;
+        }
+    });
+    return result;
 }

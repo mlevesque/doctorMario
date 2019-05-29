@@ -9,11 +9,14 @@ import { Table } from "./model/Table";
 import { buildVirusGameboard } from "./gameLogic/virusPropagator";
 import gameReducers from "./reducers/Main.reducer";
 import { ColorType } from "./model/enums";
+import { createFloatingPillSetPillAction } from "./actions/FloatingPill.actions";
+import { generateFloatingPill } from "./gameLogic/generatePill";
 
 const store = createStore(gameReducers, InitialGameState);
 
-let data: Table<ColorType> = buildVirusGameboard(8, 20, 40, 40, 40);
+let data: Table<ColorType> = buildVirusGameboard(8, 20, 3, 3, 3);
 store.dispatch(createBuildGameboardAction(data));
+store.dispatch(createFloatingPillSetPillAction(generateFloatingPill(store.getState().gameboard)));
 
 ReactDOM.render(
     <Provider store={store}>

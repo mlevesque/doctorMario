@@ -2,15 +2,14 @@ import * as React from "react";
 import { connect } from "react-redux";
 import gameboardObjectsImage from "../assets/gameboard-objects.gif"
 import { IRenderGameParams } from "../model/IRenderGameParams";
-import { IGameState, IPill } from "../model/IGameState";
+import { IGameState, IPill, IGridPos } from "../model/IGameState";
 import { renderGame } from "../gameLogic/renderGame";
 import { IDispatchGameActions } from "../model/IDispatchGameActions";
 import { createAddPillToGameboardAction, createDestroyObjectsInGameboardAction, createPurgeDestroyObjectsAction } from "../actions/GameBoard.actions";
 import { Table } from "../model/Table";
 import { updateGame } from "../gameLogic/updateGame";
 import { createAnimationUpdateAction } from "../actions/Animation.actions";
-
-const VIRUS_INTERVAL: number = 300;
+import { createFloatingPillSetPillAction, createFloatingPillSlideAction, createFloatingPillDropAction } from "../actions/FloatingPill.actions";
 
 const mapStateToProps = (state: IGameState): IGameState => {
     return state;
@@ -19,6 +18,9 @@ const mapStateToProps = (state: IGameState): IGameState => {
 const mapDispatchToProps = (dispatch: any): IDispatchGameActions => {
     return {
         updateAnimation: (deltaTime: number) => {dispatch(createAnimationUpdateAction(deltaTime))},
+        setPill: (pill: IPill) => {dispatch(createFloatingPillSetPillAction(pill))},
+        slidePill: (position: number) => {dispatch(createFloatingPillSlideAction(position))},
+        dropPill: (position: number) => {dispatch(createFloatingPillDropAction(position))},
         addPillToGameboard: (pill: IPill) => {dispatch(createAddPillToGameboardAction(pill))},
         markDestroyObjects: (table: Table<boolean>) => {dispatch(createDestroyObjectsInGameboardAction(table))},
         purgeDestroyObjects: () => {dispatch(createPurgeDestroyObjectsAction())},
@@ -64,8 +66,10 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
      * When the components mount, begin the game loop.
      */
     componentDidMount() {
+        let canvas: HTMLCanvasElement = document.getElementById("gameCanvas") as HTMLCanvasElement;
+
         this.prevTimestamp = 0;
-        this.renderContext = (document.getElementById("gameCanvas") as HTMLCanvasElement).getContext("2d");
+        this.renderContext = canvas.getContext("2d");
         this.spriteSheet = document.getElementById("spriteSheet") as HTMLImageElement;
         window.requestAnimationFrame(this.gameLoop.bind(this));
     }
@@ -76,7 +80,6 @@ class GameComponent extends React.Component<IGameState & IDispatchGameActions> {
     render() {
         return (
             <div>
-                <div>Test</div>
                 <img id="spriteSheet" src={gameboardObjectsImage} hidden={true} />
                 <canvas id="gameCanvas" width={640} height={640} />
             </div>
