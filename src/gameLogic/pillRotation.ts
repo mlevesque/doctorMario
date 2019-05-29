@@ -58,8 +58,8 @@ function __setRotationForPill(pill: IPill, rotation: PillRotation): void {
         case PillRotation.VERT:
             part1.position = {x:0, y:1}
             part2.position = {x:0, y:0}
-            part1.type = ObjectType.PILL_TOP;
-            part2.type = ObjectType.PILL_BOTTOM;
+            part1.type = ObjectType.PILL_BOTTOM;
+            part2.type = ObjectType.PILL_TOP;
             break;
         case PillRotation.HORIZ_FLIPPED:
             part1.position = {x:1, y:0}
@@ -70,8 +70,8 @@ function __setRotationForPill(pill: IPill, rotation: PillRotation): void {
         case PillRotation.VERT_FLIPPED:
             part1.position = {x:0, y:0}
             part2.position = {x:0, y:1}
-            part1.type = ObjectType.PILL_BOTTOM;
-            part2.type = ObjectType.PILL_TOP;
+            part1.type = ObjectType.PILL_TOP;
+            part2.type = ObjectType.PILL_BOTTOM;
             break;
     }
 
@@ -160,7 +160,7 @@ function __determineRotateAction(pill: IPill, gameboard: IGameBoard): PillRotate
 export function rotatePill(pill: IPill, gameboard: IGameBoard): boolean {
     // we can't rotate if the pill can't be rotated as it is:
     //  current rotation is invalid or is not in two parts
-    if (__canRotate(pill)) {
+    if (!__canRotate(pill)) {
         return false;
     }
 
