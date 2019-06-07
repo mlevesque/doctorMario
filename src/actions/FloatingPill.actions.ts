@@ -9,6 +9,7 @@ export enum FloatingPillAction {
     DROP = 'DROP',
     ROTATE = 'ROTATE',
     SET_DROP_INTERVAL = 'SET_DROP_INTERVAL',
+    RESET_SLIDE_COOLDOWN = 'RESET_SLIDE_COOLDOWN',
 }
 
 /**
@@ -28,4 +29,7 @@ export function createFloatingPillRotateAction(gameboard: IGameBoard): AnyAction
 }
 export function createFloatingPillSetDropIntervalAction(interval: number): AnyAction {
     return { type: FloatingPillAction.SET_DROP_INTERVAL, payload: interval };
+}
+export function createFloatingPillResetSlideCooldownAction(): AnyAction {
+    return { type: FloatingPillAction.RESET_SLIDE_COOLDOWN };
 }

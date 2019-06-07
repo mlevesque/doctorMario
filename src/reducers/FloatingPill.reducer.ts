@@ -1,14 +1,13 @@
-import { IPill, IFloatingPill, IGridPos } from "../model/IGameState";
+import { IPill, IFloatingPill, IGridPos, IControlledFloatingPill } from "../model/IGameState";
 import { GameboardAction } from "../actions/GameBoard.actions";
 import { FloatingPillAction } from "../actions/FloatingPill.actions";
 import { rotatePill } from "../gameLogic/pillRotation";
 import { IGameBoard } from "../model/IGameBoard";
 import { InitialGameState } from "./InitialGameState";
-import { AnimationAction } from "../actions/Animation.actions";
-import { number } from "prop-types";
+import { GameAction } from "../actions/Game.actions";
 
-export function floatingPillReducer(state: IFloatingPill = InitialGameState.floatingPill, action: any): IFloatingPill {
-    let newFloatingPill: IFloatingPill;
+export function floatingPillReducer(state: IControlledFloatingPill = InitialGameState.controlPill, action: any): IControlledFloatingPill {
+    let newFloatingPill: IControlledFloatingPill;
     switch (action.type) {
 
         // ============================================================
@@ -23,10 +22,11 @@ export function floatingPillReducer(state: IFloatingPill = InitialGameState.floa
 
         // ============================================================
         // update elapsed time for floating pill, but only if the pill exists
-        case AnimationAction.UPDATE:
+        case GameAction.UPDATE:
             if (state.pill != null) {
                 newFloatingPill = Object.assign({}, state);
                 newFloatingPill.elapsedTime += action.payload as number;
+                newFloatingPill.slideCooldown += action.payload as number;
                 return newFloatingPill;
             }
             break;
@@ -96,6 +96,13 @@ export function floatingPillReducer(state: IFloatingPill = InitialGameState.floa
             newFloatingPill = Object.assign({}, state);
             newFloatingPill.dropInterval = interval;
             newFloatingPill.elapsedTime = Math.max(state.elapsedTime - diff, 0);
+            return newFloatingPill;
+
+
+        // ============================================================
+        case FloatingPillAction.RESET_SLIDE_COOLDOWN:
+            newFloatingPill = Object.assign({}, state);
+            newFloatingPill.slideCooldown = 0;
             return newFloatingPill;
     }
     return state;

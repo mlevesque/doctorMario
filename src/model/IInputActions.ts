@@ -1,6 +1,8 @@
+interface IInputSet {
+    previous: boolean;
+    current: boolean;
+}
+
 export interface IInputActions {
-    rotate: boolean;
-    left: boolean;
-    right: boolean;
-    down: boolean;
+    [inputType: string]: IInputSet;
 }

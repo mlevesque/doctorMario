@@ -1,3 +1,10 @@
+export enum InputType {
+    ROTATE = "ROTATE",
+    LEFT = "LEFT",
+    RIGHT = "RIGHT",
+    DOWN = "DOWN",
+}
+
 /**
  * Color designator for a virus or pill half
  */

@@ -1,5 +1,6 @@
 import { IGameBoard } from "./IGameBoard";
 import { ColorType, ObjectType, PillRotation, FlowState } from "./enums";
+import { IInputActions } from "./IInputActions";
 
 /**
  * Positional data within the gameboard.
@@ -33,6 +34,8 @@ export interface IFloatingPill {
     elapsedTime: number;
 }
 
+export type IControlledFloatingPill = IFloatingPill & {slideCooldown: number};
+
 export interface IVirusGameboardAnimation {
     elapsedTime: number;
     frameIndex: number;
@@ -47,7 +50,11 @@ export interface IFlowState {
  * The full redux state.
  */
 export interface IGameState {
+    inputs: IInputActions;
+
     gameboard: IGameBoard;
-    floatingPill: IFloatingPill;
+    controlPill: IControlledFloatingPill;
     virusGameboardAnimation: IVirusGameboardAnimation;
+
+    gameboardRenderCount: number;
 }
