@@ -1,109 +1,143 @@
-import { IPill, IFloatingPill, IGridPos, IControlledFloatingPill } from "../model/IGameState";
-import { GameboardAction } from "../actions/GameBoard.actions";
+import { IPill, IFloatingPills, IGridPos, IControlledFloatingPill, IPillHash, IGameObject } from "../model/IGameState";
 import { FloatingPillAction } from "../actions/FloatingPill.actions";
-import { rotatePill } from "../gameLogic/pillRotation";
-import { IGameBoard } from "../model/IGameBoard";
 import { InitialGameState } from "./InitialGameState";
+import { AnyAction } from "redux";
+import { clonePill } from "../gameLogic/helpers";
 import { GameAction } from "../actions/Game.actions";
 
-export function floatingPillReducer(state: IControlledFloatingPill = InitialGameState.controlPill, action: any): IControlledFloatingPill {
-    let newFloatingPill: IControlledFloatingPill;
-    switch (action.type) {
+function findIntertionIndexRec(state: IFloatingPills, a: number, b: number, y: number): number {
+    if (a === b) {
+        return a;
+    }
 
-        // ============================================================
-        // when the pill is added to the gameboard, it's no longer floating, and so
-        // we remove it here
-        case GameboardAction.ADD_PILL_TO_GAMEBOARD:
-            newFloatingPill = Object.assign({}, state);
-            newFloatingPill.pill = null;
-            newFloatingPill.elapsedTime = 0;
-            return newFloatingPill;
+    // get center index
+    let pivot: number = Math.floor(a + (b - a) / 2);
+    console.log("PIVOT " + pivot);
+    const pivotY: number = state.pills[state.pillIds[pivot]].position.y;
+    if (pivotY === y) {
+        return pivot;
+    }
+    else if (pivotY > y) {
+        return findIntertionIndexRec(state, pivot + 1, b, y);
+    }
+    else {
+        return findIntertionIndexRec(state, a, pivot - 1, y);
+    }
+}
+function findIntertionIndex(state: IFloatingPills, y: number): number {
+    return findIntertionIndexRec(state, 0, state.pillIds.length, y);
+}
 
 
-        // ============================================================
-        // update elapsed time for floating pill, but only if the pill exists
+export function floatingPillsReducer(
+                            state: IFloatingPills = InitialGameState.floatingPills,
+                            action: AnyAction): IFloatingPills {
+    let index: number;
+    let id: string;
+    switch(action.type) {
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // ADD PILL
+        case FloatingPillAction.ADD_PILL:
+            // add pill to hash object
+            const pill: IPill = action.payload as IPill;
+            console.log("ADD PREV STATE - " + JSON.stringify(state));
+            id = String(state.nextIdValue);
+            let newHash: IPillHash = Object.assign({}, state.pills, {
+                [id]: clonePill(pill)
+            });
+
+            console.log("MLEVESQUE");
+
+
+            // figure out where to insert object into id array
+            // we want to keep the array sorted by pill y position
+            let insertIndex: number = findIntertionIndex(state, pill.position.y);
+
+            console.log("MLEVESQUE 2");
+
+
+            let newState = {
+                pillIds: [...state.pillIds.slice(0, insertIndex),
+                          id,
+                          ...state.pillIds.slice(insertIndex)],
+                pills: newHash,
+                nextIdValue: state.nextIdValue + 1
+            };
+
+            console.log("ADD " + JSON.stringify(newState));
+            return newState;
+
+
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // REMOVE PILL
+        case FloatingPillAction.REMOVE_PILL:
+            index = action.payload as number;
+            if (index >= 0 && index < state.pillIds.length) {
+                id = state.pillIds[index];
+                let newHash: IPillHash = Object.keys(state.pills).reduce(
+                    (acc, cur) => cur === id ? acc : {...acc, [cur]: state.pills[cur]}, {}
+                );
+                return {
+                    pillIds: [...state.pillIds.slice(0, index), ...state.pillIds.slice(index+1)],
+                    pills: newHash,
+                    nextIdValue: state.nextIdValue
+                };
+            }
+            break;
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // UPDATE PILL
+        case FloatingPillAction.UPDATE_PILL:
+            index = action.payload.pillIndex as number;
+            if (index >= 0 && index < state.pillIds.length) {
+                id = state.pillIds[index];
+                return {
+                    pillIds: [...state.pillIds],
+                    pills: {
+                        ...state.pills,
+                        [id]: clonePill(action.payload.pill as IPill)
+                    },
+                    nextIdValue: state.nextIdValue
+                };
+            }
+            break;
+
+    }
+    return state;
+}
+
+export function currentDropIntervalReducer(state: number = InitialGameState.currentDropInterval, action: AnyAction): number {
+    switch(action.type) {
+        case FloatingPillAction.SET_CURRENT_DROP_INTERVAL:
+            return action.payload as number;
+    }
+    return state;
+}
+
+export function regularDropIntervalReducer(state: number = InitialGameState.regularDropInterval, action: AnyAction): number {
+    switch(action.type) {
+        case FloatingPillAction.SET_REGULAR_DROP_INTERVAL:
+            return action.payload as number;
+    }
+    return state;
+}
+
+export function dropTimeReducer(state: number = InitialGameState.dropTime, action: AnyAction): number {
+    switch(action.type) {
         case GameAction.UPDATE:
-            if (state.pill != null) {
-                newFloatingPill = Object.assign({}, state);
-                newFloatingPill.elapsedTime += action.payload as number;
-                newFloatingPill.slideCooldown += action.payload as number;
-                return newFloatingPill;
-            }
-            break;
+            return state + (action.payload as number);
+        case FloatingPillAction.SET_DROP_TIME:
+            return (action.payload as number);
+    }
+    return state;
+}
 
-
-        // ============================================================
-        case FloatingPillAction.SET_PILL:
-            newFloatingPill = Object.assign({}, state);
-            newFloatingPill.pill = action.payload as IPill;
-            return newFloatingPill;
-
-
-        // ============================================================
-        case FloatingPillAction.SLIDE:
-            if (state.pill != null) {
-                let pos: number = action.payload as number;
-                newFloatingPill = Object.assign({}, state);
-                newFloatingPill.pill.position = Object.assign({}, state.pill.position);
-                newFloatingPill.pill.position.x += pos;
-                return newFloatingPill;
-            }
-            break;
-
-            
-        // ============================================================
-        case FloatingPillAction.DROP:
-            let amount: number = action.payload as number;
-            if (state.pill != null && amount > 0) {
-                newFloatingPill = Object.assign({}, state);
-                newFloatingPill.pill.position = Object.assign({}, state.pill.position);
-                newFloatingPill.pill.position.y += amount;
-                newFloatingPill.elapsedTime -= newFloatingPill.dropInterval * amount;
-                if (newFloatingPill.elapsedTime < 0) {
-                    newFloatingPill.elapsedTime = 0;
-                }
-                return newFloatingPill;
-            }
-            break;
-
-
-        // ============================================================
-        case FloatingPillAction.ROTATE:
-            if (state.pill != null) {
-                // get gameboard (needed for rotation)
-                let gameboard: IGameBoard = action.payload;
-
-                // perform rotation
-                let pill: IPill = Object.assign({}, state.pill);
-                rotatePill(pill, gameboard);
-
-                // set new pill
-                newFloatingPill = Object.assign({}, state);
-                newFloatingPill.pill = pill;
-                return newFloatingPill;
-            }
-            break;
-
-
-        // ============================================================
-        case FloatingPillAction.SET_DROP_INTERVAL:
-            let interval: number = action.payload as number;
-
-            // calculate the difference that the interval will change
-            // Then subtract this difference from the elapsed time.
-            let diff: number = state.dropInterval - interval;
-
-            newFloatingPill = Object.assign({}, state);
-            newFloatingPill.dropInterval = interval;
-            newFloatingPill.elapsedTime = Math.max(state.elapsedTime - diff, 0);
-            return newFloatingPill;
-
-
-        // ============================================================
-        case FloatingPillAction.RESET_SLIDE_COOLDOWN:
-            newFloatingPill = Object.assign({}, state);
-            newFloatingPill.slideCooldown = 0;
-            return newFloatingPill;
+export function pillWorldYOffsetReducer(state: number = InitialGameState.pillWorldYOffset, action: AnyAction): number {
+    switch(action.type) {
+        case FloatingPillAction.SET_PILL_WORLD_Y_OFFSET:
+            return action.payload as number;
     }
     return state;
 }

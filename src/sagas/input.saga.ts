@@ -1,11 +1,20 @@
 import { IInputActions } from "../model/IInputActions";
 import { select, put } from "redux-saga/effects";
-import { getInputState } from "./selectHelpers";
+import { getInputState, 
+         getSlideCooldownState, 
+         getRegularDropIntervalState, 
+         getDropTimeState,
+         getCurrentDropIntervalState} from "./selectHelpers";
 import { InputType } from "../model/enums";
 import { canPillSlideLeft, canPillSlideRight } from "../gameLogic/collisionChecks";
 import { IGameBoard } from "../model/IGameBoard";
-import { IPill, IControlledFloatingPill } from "../model/IGameState";
-import { createFloatingPillRotateAction, createFloatingPillSlideAction, createFloatingPillSetDropIntervalAction, createFloatingPillResetSlideCooldownAction } from "../actions/FloatingPill.actions";
+import { IPill } from "../model/IGameState";
+import { clonePill } from "../gameLogic/helpers";
+import { createResetSlideCooldownAction } from "../actions/Input.actions";
+import { rotatePill } from "../gameLogic/pillRotation";
+import { createFloatingPillUpdatePillAction, 
+         createSetCurrentDropIntervalAction, 
+         createSetDropTimeAction} from "../actions/FloatingPill.actions";
 
 function isOverSlideCooldown(cooldownTime: number): boolean {
     return cooldownTime > 150;
@@ -31,37 +40,58 @@ function isKeyUp(type: InputType, inputActions: IInputActions): boolean {
     return input && !input.current;
 }
 
-export function* inputSaga(pill: IControlledFloatingPill, gameboard: IGameBoard) {
+
+export function* inputSaga(pill: IPill, gameboard: IGameBoard) {
     const inputs: IInputActions = yield select(getInputState);
+    let pillChanged: boolean = false;
 
     // rotate pill
     if (isKeyPressed(InputType.ROTATE, inputs)) {
-        yield put(createFloatingPillRotateAction(gameboard));
+        pillChanged = rotatePill(pill, gameboard) || pillChanged;
     }
 
     // slide pill left
-    if (canPillSlideLeft(pill.pill, gameboard)) {
+    const slideCooldown: number = yield select(getSlideCooldownState);
+    if (canPillSlideLeft(pill, gameboard)) {
         if (isKeyPressed(InputType.LEFT, inputs)
-            || isOverSlideCooldown(pill.slideCooldown) && isKeyDown(InputType.LEFT, inputs)) {
-            yield put(createFloatingPillSlideAction(-1));
-            yield put(createFloatingPillResetSlideCooldownAction());
+            || isOverSlideCooldown(slideCooldown) && isKeyDown(InputType.LEFT, inputs)) {
+            pill.position.x--;
+            pillChanged = true;
+            yield put(createResetSlideCooldownAction());
         }
     }
     
     // slide pill right
-    if (canPillSlideRight(pill.pill, gameboard)) {
+    if (canPillSlideRight(pill, gameboard)) {
         if (isKeyPressed(InputType.RIGHT, inputs)
-            || isOverSlideCooldown(pill.slideCooldown) && isKeyDown(InputType.RIGHT, inputs)) {
-            yield put(createFloatingPillSlideAction(1));
-            yield put(createFloatingPillResetSlideCooldownAction());
+            || isOverSlideCooldown(slideCooldown) && isKeyDown(InputType.RIGHT, inputs)) {
+            pill.position.x++;
+            pillChanged = true;
+            yield put(createResetSlideCooldownAction());
         }
     }
 
     // perform input for dropping
     if (isKeyPressed(InputType.DOWN, inputs)) {
-        yield put(createFloatingPillSetDropIntervalAction(100));
+        // we need to calculate the difference in the interval change in order
+        //  to adjust the drop time. This fixes the issue of the pill dropping
+        //  down too quickly when pressing down
+        const oldInterval: number = yield select(getCurrentDropIntervalState);
+        let diff = oldInterval - 100;
+
+        yield put(createSetCurrentDropIntervalAction(100));
+
+        let dropTime: number = yield select(getDropTimeState);
+        dropTime = Math.max(dropTime - diff, 0);
+        yield put(createSetDropTimeAction(dropTime));
     }
     else if (isKeyReleased(InputType.DOWN, inputs)) {
-        yield put(createFloatingPillSetDropIntervalAction(800));
+        const regularInterval: number = yield select(getRegularDropIntervalState);
+        yield put(createSetCurrentDropIntervalAction(regularInterval));
+    }
+
+    // update the pill
+    if (pillChanged) {
+        yield put(createFloatingPillUpdatePillAction(0, pill));
     }
 }

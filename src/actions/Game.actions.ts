@@ -1,6 +1,9 @@
 import { AnyAction } from "redux";
 import { FlowState } from "../model/enums";
 
+/**
+ * General game actions.
+ */
 export enum GameAction {
     UPDATE = 'UPDATE',
     SET_FLOW_STATE = 'SET_FLOW_STATE',

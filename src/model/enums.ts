@@ -61,7 +61,7 @@ export enum FlowState {
     CONTROL_PILL,           // Player moves and places pill
     PLACING_PILL,           // Player controlled pill is in process of being placed
     DESTROY_OBJECTS,        // game objects go through destroy animation around newly placed pill
-    FRAGMENT_FALL           // remainder pill fragments fall after destruction
+    DEBRIS_FALL             // remainder pill debris fall after destruction
 }
 
 export enum MatchDirection {

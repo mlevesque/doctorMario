@@ -11,6 +11,7 @@ export const InitialGameState:IGameState = {
         [InputType.RIGHT]: {previous: false, current: false},
         [InputType.DOWN]: {previous: false, current: false},
     },
+    slideCooldown: 0,
 
     gameboard: {
         width: 5,
@@ -20,12 +21,18 @@ export const InitialGameState:IGameState = {
             [null, null, {color: ColorType.YELLOW, type: ObjectType.VIRUS}, {color: ColorType.BLUE, type: ObjectType.VIRUS}]
         ]
     },
-    controlPill: {
-        pill: null,
-        dropInterval: 1000,
-        elapsedTime: 0,
-        slideCooldown: 0,
+    invalidatedPositions: [],
+    
+    floatingPills: {
+        pillIds: [],
+        pills: {},
+        nextIdValue: 1
     },
+    currentDropInterval: 800,
+    regularDropInterval: 800,
+    dropTime: 0,
+    pillWorldYOffset: 0,
+
     virusGameboardAnimation: {
         elapsedTime: 0,
         frameIndex: 0

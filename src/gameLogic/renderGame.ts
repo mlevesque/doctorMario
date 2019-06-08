@@ -1,10 +1,18 @@
 import { ISprite, ISpriteAnimation } from "../model/JsonScemas";
 import { ColorType, ObjectType } from "../model/enums";
 import { getAnimationSetFromId, getVirusAnimationId, getSpriteFromId, getPillSpriteId } from "./JsonDataMethods";
-import { IGridSpace } from "../model/IGameBoard";
+import { IGridSpace, IGameBoard } from "../model/IGameBoard";
 import { GRID_SIZE } from "../constants";
-import { IGameState, IPill, IGameObject, IGridPos } from "../model/IGameState";
-import { IRenderGameParams } from "../model/IRenderGameParams";
+import { IPill, IGameObject, IGridPos } from "../model/IGameState";
+
+
+export interface IRenderGameParams {
+    gameboard: IGameBoard;
+    pills: IPill[];
+    pillVerticalOffset: number;
+    virusAnimationFrame: number;
+}
+
 
 /**
  * Returns the sprite data for a virus with the given color and of the given frame index
@@ -79,12 +87,13 @@ function renderGameboard(   ctx: CanvasRenderingContext2D,
 
 function renderFloatingPill(ctx: CanvasRenderingContext2D,
                             spriteSheet: HTMLImageElement,
-                            pill: IPill): void {
+                            pill: IPill,
+                            yOffset: number): void {
     pill.parts.forEach((part: IGameObject) => {
         let sprite: ISprite = getSpriteFromId(getPillSpriteId(part.color, part.type));
         let pos: IGridPos = {
             x: (part.position.x + pill.position.x) * GRID_SIZE,
-            y: (part.position.y + pill.position.y) * GRID_SIZE
+            y: (part.position.y + pill.position.y) * GRID_SIZE + yOffset
         };
         renderSprite(ctx, spriteSheet, sprite, pos.x, pos.y);
     });
@@ -107,9 +116,9 @@ export function renderGame( ctx: CanvasRenderingContext2D,
     ctx.fillRect(0, 0, 10000, 10000);
 
     renderGameboard(ctx, spriteSheet, params);
-    if (params.pill != null) {
-        renderFloatingPill(ctx, spriteSheet, params.pill);
-    }
+    params.pills.forEach((pill: IPill) => {
+        renderFloatingPill(ctx, spriteSheet, pill, params.pillVerticalOffset);
+    });
 
     ctx.restore();
 }

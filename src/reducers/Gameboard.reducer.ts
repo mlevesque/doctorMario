@@ -1,9 +1,10 @@
 import { IGameBoard, IGridSpace, IGridDimensions } from "../model/IGameBoard";
 import { InitialGameState } from "./InitialGameState";
 import { Table } from "../model/Table";
-import { IPill, IGameObject } from "../model/IGameState";
+import { IPill, IGameObject, IGridPos } from "../model/IGameState";
 import { ColorType, ObjectType } from "../model/enums";
 import { GameboardAction } from "../actions/GameBoard.actions";
+import { AnyAction } from "redux";
 
 /**
  * Builds grid with given dimensions and returns it.
@@ -23,12 +24,12 @@ function allocateGrid(width: number, height: number): IGridSpace[][] {
  * @param state 
  * @param payload 
  */
-export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard, action: any): IGameBoard {
+export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard, action: AnyAction): IGameBoard {
     let newState: IGameBoard = null;
     switch (action.type) {
 
-
-        // ============================================================
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // BUILD GAMEBOARD
         case GameboardAction.BUILD_GAMEBOARD:
             let board: Table<string> = action.payload as Table<string>;
             newState = {
@@ -49,7 +50,8 @@ export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard,
             return newState;
 
 
-        // ============================================================
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // ADD PILL TO GAMEBOARD
         case GameboardAction.ADD_PILL_TO_GAMEBOARD:
             // get pill data
             let pillData: IPill = action.payload as IPill;
@@ -99,7 +101,8 @@ export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard,
             return newState;
 
 
-        // ============================================================
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // DESTROY OBJECTS IN GAMEBOARD
         case GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD:
             let destroyTable: Table<boolean> = action.payload as Table<boolean>;
             newState = Object.assign({}, state);
@@ -116,7 +119,8 @@ export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard,
             return newState;
 
 
-        // ============================================================
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // DESTROY OBJECTS IN GAMEBOARD
         case GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD:
             newState = Object.assign({}, state);
             newState.grid = state.grid.map( (row: IGridSpace[], y: number) => {
@@ -132,14 +136,22 @@ export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard,
             return newState;
 
 
-        // ============================================================
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // CLEAR GAMEBOARD
         case GameboardAction.CLEAR_GAMEBOARD:
             newState = Object.assign({}, state);
             newState.grid = allocateGrid(newState.width, newState.height);
             return newState;
-
-
-        default:
-            return state;
     }
+    return state;
+}
+
+export function invalidatedPositionsReducer(state: IGridPos[] = InitialGameState.invalidatedPositions, action: AnyAction): IGridPos[] {
+    switch(action.type) {
+        case GameboardAction.ADD_INVALIDATED_POSITIONS:
+            return [...state, ...(action.payload as IGridPos[])];
+        case GameboardAction.CLEAR_INVALIDATED_POSITIONS:
+            return [];
+    }
+    return state;
 }

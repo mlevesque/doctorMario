@@ -2,7 +2,7 @@ import { takeEvery, take, select, call, put, fork } from 'redux-saga/effects'
 import { GameAction, createGameRenderGameboard, createGameSetFlowStateAction } from '../actions/Game.actions';
 import { createUpdateInputAction } from '../actions/Input.actions';
 import { FlowState } from '../model/enums';
-import { controlPillUpdateSaga, controlPillInitSaga } from './controlPill.saga';
+import { controlPillInitSaga, floatingPillUpdateSaga } from './controlPill.saga';
 import { getFlowState, getFlowStateDelay } from './selectHelpers';
 import { AnyAction } from 'redux';
 
@@ -32,7 +32,7 @@ function* updateGameSaga() {
     switch (flowState) {
         // Control pil state refers to when a single pill is falling and the player can control it
         case FlowState.CONTROL_PILL:
-            yield call(controlPillUpdateSaga);
+            yield call(floatingPillUpdateSaga, true);
             break;
         case FlowState.PLACING_PILL:
             yield call(delayStateSaga, 500, FlowState.CONTROL_PILL);

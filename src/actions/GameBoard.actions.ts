@@ -1,5 +1,5 @@
 import { Table } from '../model/Table';
-import { IPill } from '../model/IGameState';
+import { IPill, IGridPos } from '../model/IGameState';
 import { ColorType } from '../model/enums';
 import { AnyAction } from 'redux';
 
@@ -12,6 +12,8 @@ export enum GameboardAction {
     DESTROY_OBJECTS_IN_GAMEBOARD = 'DESTROY_OBJECTS_IN_GAMEBOARD',
     PURGE_DESTROY_OBJECTS = 'PURGE_DESTROY_OBJECTS',
     CLEAR_GAMEBOARD = 'CLEAR_GAMEBOARD',
+    ADD_INVALIDATED_POSITIONS = 'ADD_INVALIDATED_POSITIONS',
+    CLEAR_INVALIDATED_POSITIONS = 'CLEAR_INVALIDATED_POSITIONS'
 }
 
 /**
@@ -31,4 +33,10 @@ export function createPurgeDestroyObjectsAction(): AnyAction {
 }
 export function createClearGameboardAction(): AnyAction {
     return { type: GameboardAction.CLEAR_GAMEBOARD };
+}
+export function createAddInvalidatedPositionsAction(positions: IGridPos[]): AnyAction {
+    return { type: GameboardAction.ADD_INVALIDATED_POSITIONS, payload: positions };
+}
+export function createClearInvalidatedPositionsAction(): AnyAction {
+    return { type: GameboardAction.CLEAR_INVALIDATED_POSITIONS };
 }

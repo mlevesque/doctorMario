@@ -1,9 +1,8 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import gameboardObjectsImage from "../assets/gameboard-objects.gif"
-import { IRenderGameParams } from "../model/IRenderGameParams";
 import { IGameState, IPill, IGridPos } from "../model/IGameState";
-import { renderGame } from "../gameLogic/renderGame";
+import { renderGame, IRenderGameParams } from "../gameLogic/renderGame";
 
 const mapStateToProps = (state: IGameState): IGameState => {
     return state;
@@ -17,7 +16,10 @@ class GameComponent extends React.Component<IGameState> {
     mapStateToRenderParams(state: IGameState): IRenderGameParams {
         return {
             gameboard: state.gameboard,
-            pill: state.controlPill.pill,
+            pills: state.floatingPills.pillIds.map<IPill>((id: string) => {
+                return state.floatingPills.pills[id];
+            }),
+            pillVerticalOffset: state.pillWorldYOffset,
             virusAnimationFrame: state.virusGameboardAnimation.frameIndex,
         }
     }

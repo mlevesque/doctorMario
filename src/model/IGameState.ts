@@ -28,13 +28,16 @@ export interface IPill {
     rotationState: PillRotation;
 }
 
-export interface IFloatingPill {
-    pill: IPill;
-    dropInterval: number;
-    elapsedTime: number;
+export interface IPillHash {
+    [id: string]: IPill;
+}
+export interface IFloatingPills {
+    pillIds: string[];
+    pills: IPillHash;
+    nextIdValue: number;
 }
 
-export type IControlledFloatingPill = IFloatingPill & {slideCooldown: number};
+export type IControlledFloatingPill = IFloatingPills & {slideCooldown: number};
 
 export interface IVirusGameboardAnimation {
     elapsedTime: number;
@@ -45,14 +48,28 @@ export interface IVirusGameboardAnimation {
  * The full redux state.
  */
 export interface IGameState {
+    // flow state
     flowState: FlowState;
     flowDelayTime: number;
 
+    // input
     inputs: IInputActions;
+    slideCooldown: number;
 
+    // gameboard
     gameboard: IGameBoard;
-    controlPill: IControlledFloatingPill;
+    invalidatedPositions: IGridPos[];
+
+    // pills
+    floatingPills: IFloatingPills;
+    currentDropInterval: number;
+    regularDropInterval: number;
+    dropTime: number;
+    pillWorldYOffset: number;
+
+    // animation
     virusGameboardAnimation: IVirusGameboardAnimation;
 
+    // rendering
     gameboardRenderCount: number;
 }

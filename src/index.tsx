@@ -9,7 +9,7 @@ import { Table } from "./model/Table";
 import { buildVirusGameboard } from "./gameLogic/virusPropagator";
 import gameReducers from "./reducers/Main.reducer";
 import { ColorType, InputType } from "./model/enums";
-import { createFloatingPillSetPillAction } from "./actions/FloatingPill.actions";
+import { createFloatingPillAddPillAction } from "./actions/FloatingPill.actions";
 import { generateFloatingPill } from "./gameLogic/generatePill";
 import { createGameUpdateAction } from "./actions/Game.actions";
 import createSagaMiddleware from "@redux-saga/core";
@@ -21,7 +21,7 @@ const store: Store = createStore(gameReducers, InitialGameState, applyMiddleware
 
 let data: Table<ColorType> = buildVirusGameboard(8, 20, 4, 4, 4);
 store.dispatch(createBuildGameboardAction(data));
-store.dispatch(createFloatingPillSetPillAction(generateFloatingPill(store.getState().gameboard)));
+store.dispatch(createFloatingPillAddPillAction(generateFloatingPill(store.getState().gameboard)));
 
 
 ReactDOM.render(

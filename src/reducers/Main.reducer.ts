@@ -1,19 +1,30 @@
 import { combineReducers } from 'redux'
-import { gameboardReducer } from './GameBoard.reducer'
+import { gameboardReducer, invalidatedPositionsReducer } from './GameBoard.reducer'
 import { IGameState } from '../model/IGameState';
-import { floatingPillReducer } from './FloatingPill.reducer';
 import { virusGameboardAnimationReducer } from './VirusGameboardAnimation.reducer';
-import { gameboardRenderReducer } from './Render.reducer';
-import { inputReducer } from './Input.reducer';
+import { gameboardRenderReducer } from './render.reducer';
+import { inputsReducer, slideCooldownReducer } from './Input.reducer';
 import { flowStateReducer, flowDelayReducer } from './flowState.reducer';
+import { floatingPillsReducer, currentDropIntervalReducer, regularDropIntervalReducer, pillWorldYOffsetReducer, dropTimeReducer } from './floatingPill.reducer';
 
 const gameReducers = combineReducers<IGameState>({
     flowState: flowStateReducer,
     flowDelayTime: flowDelayReducer,
-    inputs: inputReducer,
+
+    inputs: inputsReducer,
+    slideCooldown: slideCooldownReducer,
+
     gameboard: gameboardReducer,
-    controlPill: floatingPillReducer,
+    invalidatedPositions: invalidatedPositionsReducer,
+
+    floatingPills: floatingPillsReducer,
+    currentDropInterval: currentDropIntervalReducer,
+    regularDropInterval: regularDropIntervalReducer,
+    dropTime: dropTimeReducer,
+    pillWorldYOffset: pillWorldYOffsetReducer,
+
     virusGameboardAnimation: virusGameboardAnimationReducer,
+    
     gameboardRenderCount: gameboardRenderReducer,
 });
 
