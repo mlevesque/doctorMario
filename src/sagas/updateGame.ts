@@ -1,33 +1,55 @@
 import { takeEvery, select, call, put } from 'redux-saga/effects'
 import { GameAction, createGameRenderGameboard } from '../actions/Game.actions';
-import { IGameState, IPill, IFloatingPill, IControlledFloatingPill } from '../model/IGameState';
+import { IControlledFloatingPill, IGridPos } from '../model/IGameState';
 import { IGameBoard } from '../model/IGameBoard';
-import { createFloatingPillRotateAction, createFloatingPillSlideAction, createFloatingPillSetDropIntervalAction, createFloatingPillSetPillAction, createFloatingPillDropAction } from '../actions/FloatingPill.actions';
-import { canPillSlideLeft, canPillSlideRight, hasPillLanded } from '../gameLogic/collisionChecks';
+import { createFloatingPillSetPillAction, createFloatingPillDropAction } from '../actions/FloatingPill.actions';
+import { hasPillLanded } from '../gameLogic/collisionChecks';
 import { generateFloatingPill } from '../gameLogic/generatePill';
 import { createAddPillToGameboardAction } from '../actions/GameBoard.actions';
 import { getFloatingPillState, getGameboardState } from './selectHelpers';
 import { inputSaga } from './input.saga';
 import { createUpdateInputAction } from '../actions/Input.actions';
+import { findColorMatches } from '../gameLogic/colorMatching';
+import { IColorMatch } from '../model/IColorMatch';
 
 export function* updateGameSaga() {
     let floatingPill: IControlledFloatingPill = yield select(getFloatingPillState);
 
     if (floatingPill.pill != null) {
-        const pill: IPill = floatingPill.pill;
-        const gameboard: IGameBoard = yield select(getGameboardState);
+        let gameboard: IGameBoard = yield select(getGameboardState);
 
         // handle input
         yield call(inputSaga, floatingPill, gameboard);
 
         // drop pill
-        floatingPill = yield select(getFloatingPillState);
         let updateCount: number = Math.floor(floatingPill.elapsedTime / floatingPill.dropInterval);
         let shouldSetNewPill: boolean = false;
         while (updateCount > 0) {
+            floatingPill = yield select(getFloatingPillState);
+
             // check if pill has rested, then place it
-            if (hasPillLanded(pill, gameboard)) {
-                yield put(createAddPillToGameboardAction(pill));
+            if (hasPillLanded(floatingPill.pill, gameboard)) {
+                let dirtySpaces: IGridPos[] = [
+                    {
+                        x: floatingPill.pill.position.x + floatingPill.pill.parts[0].position.x,
+                        y: floatingPill.pill.position.y + floatingPill.pill.parts[0].position.y
+                    },
+                    {
+                        x: floatingPill.pill.position.x + floatingPill.pill.parts[1].position.x,
+                        y: floatingPill.pill.position.y + floatingPill.pill.parts[1].position.y
+                    }
+                ];
+
+                yield put(createAddPillToGameboardAction(floatingPill.pill));
+
+                gameboard = yield select(getGameboardState);
+                
+                let matches: IColorMatch[] = findColorMatches(gameboard, dirtySpaces);
+
+                if (matches.length > 0) {
+                    console.log("MATCHES - " + JSON.stringify(matches));
+                }
+
                 shouldSetNewPill = true;
             }
 

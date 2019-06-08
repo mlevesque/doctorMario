@@ -27,13 +27,13 @@ export class Table<T> {
         }
     }
 
-    constructor(width: number, height: number, invalidValue?: T) {
+    constructor(width: number, height: number, fillValue?: T, invalidValue?: T) {
         this.m_width = width;
         this.m_height = height;
         this.m_grid = new Array<T[]>(height);
         this.m_invalidValue = invalidValue;
         for (let index = 0; index < height; ++index) {
-            this.m_grid[index] = new Array<T>(width);
+            this.m_grid[index] = new Array<T>(width).fill(fillValue);
         }
     }
 }

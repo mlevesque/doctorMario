@@ -62,3 +62,8 @@ export enum FlowState {
     DESTROY_OBJECTS,        // game objects go through destroy animation around newly placed pill
     FRAGMENT_FALL           // remainder pill fragments fall after destruction
 }
+
+export enum MatchDirection {
+    VERTICAL = 0,
+    HORIZONTAL
+}

@@ -93,7 +93,7 @@ export function buildVirusGameboard(width: number, height: number, redCount: num
     let remainingBlue: number = Math.max(0, blueCount);
 
     let gameboard: Table<ColorType> = new Table<ColorType>(width, height);
-    let maskBoard: Table<number> = new Table<number>(width, height);
+    let maskBoard: Table<number> = new Table<number>(width, height, 0);
 
     // fail count keeps track of how many iteractions we fail to add a virus to the grid
     let failCount: number = 0;
