@@ -41,15 +41,12 @@ export interface IVirusGameboardAnimation {
     frameIndex: number;
 }
 
-export interface IFlowState {
-    flowQueue: FlowState[];
-    elapsedTime: number;
-}
-
 /**
  * The full redux state.
  */
 export interface IGameState {
+    flowState: FlowState;
+
     inputs: IInputActions;
 
     gameboard: IGameBoard;

@@ -1,7 +1,9 @@
 import { IGameState } from "../model/IGameState";
-import { ColorType, ObjectType, InputType } from "../model/enums";
+import { ColorType, ObjectType, InputType, FlowState } from "../model/enums";
 
 export const InitialGameState:IGameState = {
+    flowState: FlowState.CONTROL_PILL,
+
     inputs: {
         [InputType.ROTATE]: {previous: false, current: false},
         [InputType.LEFT]: {previous: false, current: false},
