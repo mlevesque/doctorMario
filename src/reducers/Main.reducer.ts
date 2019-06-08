@@ -5,10 +5,11 @@ import { floatingPillReducer } from './FloatingPill.reducer';
 import { virusGameboardAnimationReducer } from './VirusGameboardAnimation.reducer';
 import { gameboardRenderReducer } from './Render.reducer';
 import { inputReducer } from './Input.reducer';
-import { flowStateReducer } from './flowState.reducer';
+import { flowStateReducer, flowDelayReducer } from './flowState.reducer';
 
 const gameReducers = combineReducers<IGameState>({
     flowState: flowStateReducer,
+    flowDelayTime: flowDelayReducer,
     inputs: inputReducer,
     gameboard: gameboardReducer,
     controlPill: floatingPillReducer,

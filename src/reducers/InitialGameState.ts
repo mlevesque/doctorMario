@@ -3,6 +3,7 @@ import { ColorType, ObjectType, InputType, FlowState } from "../model/enums";
 
 export const InitialGameState:IGameState = {
     flowState: FlowState.CONTROL_PILL,
+    flowDelayTime: 0,
 
     inputs: {
         [InputType.ROTATE]: {previous: false, current: false},

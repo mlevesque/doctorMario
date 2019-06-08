@@ -46,6 +46,7 @@ export interface IVirusGameboardAnimation {
  */
 export interface IGameState {
     flowState: FlowState;
+    flowDelayTime: number;
 
     inputs: IInputActions;
 

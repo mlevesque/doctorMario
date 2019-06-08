@@ -13,7 +13,7 @@ import { createFloatingPillSetPillAction } from "./actions/FloatingPill.actions"
 import { generateFloatingPill } from "./gameLogic/generatePill";
 import { createGameUpdateAction } from "./actions/Game.actions";
 import createSagaMiddleware from "@redux-saga/core";
-import { mainUpdateSaga } from "./sagas/updateGame";
+import { mainUpdateSaga, rootSaga } from "./sagas/updateGame";
 import { createSetInputAction } from "./actions/Input.actions";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -55,7 +55,7 @@ setupListener("keydown", true);
 setupListener("keyup", false);
 
 
-sagaMiddleware.run(mainUpdateSaga);
+sagaMiddleware.run(rootSaga);
 let prevTimestamp: number = 0;
 function update(timeStamp: number): void {
     let dt: number = timeStamp - prevTimestamp;

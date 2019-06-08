@@ -9,8 +9,15 @@ import { findColorMatches } from "../gameLogic/colorMatching";
 import { createFloatingPillDropAction, createFloatingPillSetPillAction } from "../actions/FloatingPill.actions";
 import { inputSaga } from './input.saga';
 import { generateFloatingPill } from '../gameLogic/generatePill';
+import { createGameSetFlowStateAction } from '../actions/Game.actions';
+import { FlowState } from '../model/enums';
 
-export function* controlPillSaga() {
+export function* controlPillInitSaga() {
+    const gameboard: IGameBoard = yield select(getGameboardState);
+    yield put(createFloatingPillSetPillAction(generateFloatingPill(gameboard)));
+}
+
+export function* controlPillUpdateSaga() {
     let floatingPill: IControlledFloatingPill = yield select(getFloatingPillState);
 
     if (floatingPill.pill != null) {
@@ -57,7 +64,8 @@ export function* controlPillSaga() {
 
         // check if we should set a new pill
         if (shouldSetNewPill) {
-            yield put(createFloatingPillSetPillAction(generateFloatingPill(gameboard)));
+            yield put(createGameSetFlowStateAction(FlowState.PLACING_PILL));
         }
     }
 }
+
