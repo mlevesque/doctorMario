@@ -15,6 +15,8 @@ import { createGameUpdateAction } from "./actions/Game.actions";
 import createSagaMiddleware from "@redux-saga/core";
 import { mainUpdateSaga, rootSaga } from "./sagas/updateGame";
 import { createSetInputAction } from "./actions/Input.actions";
+import { createQueueFlowStateAction, FlowStateAction, createNextFlowStateAction } from "./actions/flowState.actions";
+import { FlowState } from "./states/stateMappings";
 
 const sagaMiddleware = createSagaMiddleware();
 const store: Store = createStore(gameReducers, InitialGameState, applyMiddleware(sagaMiddleware));
@@ -64,3 +66,8 @@ function update(timeStamp: number): void {
     window.requestAnimationFrame(update);
 }
 window.requestAnimationFrame(update);
+
+
+
+store.dispatch(createQueueFlowStateAction(FlowState.START));
+store.dispatch(createNextFlowStateAction());

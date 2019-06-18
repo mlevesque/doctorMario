@@ -50,7 +50,7 @@ export interface IVirusGameboardAnimation {
  */
 export interface IGameState {
     // flow state
-    flowState: FlowState;
+    flowStateQueue: FlowState[];
     flowDelayTime: number;
 
     // input

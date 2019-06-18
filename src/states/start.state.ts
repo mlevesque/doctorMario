@@ -1,7 +1,6 @@
-import { createGameSetFlowStateAction } from "../actions/Game.actions";
-import { put } from "redux-saga/effects";
-import { FlowState } from "./stateMappings";
+import { call } from "redux-saga/effects";
+import { startPillRound } from "../sagas/pillUpdateSagas";
 
-export function* startUpdate() {
-    yield put(createGameSetFlowStateAction(FlowState.CONTROL_PILL));
+export function* startStart() {
+    yield call(startPillRound);
 }

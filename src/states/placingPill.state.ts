@@ -6,7 +6,6 @@ import { getFloatingPillsState, getDropTimeState, getCurrentDropIntervalState } 
 import { createAddInvalidatedPositionsAction, createAddPillToGameboardAction } from "../actions/GameBoard.actions";
 import { getPillPartPositions } from "../sagas/pillUpdateSagas";
 import { delayStateSaga } from "./delay.state";
-import { FlowState } from "./stateMappings";
 
 /**
  * START - PLACING PILL
@@ -21,7 +20,7 @@ export function* placingPillStart() {
  */
 export function* placingPillUpdate() {
     const floatDelay: number = yield select(getCurrentDropIntervalState);
-    yield call(delayStateSaga, floatDelay, FlowState.HANDLE_MATCHES);
+    yield call(delayStateSaga, floatDelay);
 }
 
 /**

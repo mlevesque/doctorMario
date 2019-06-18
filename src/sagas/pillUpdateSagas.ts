@@ -6,9 +6,17 @@ import { createSetDropTimeAction, createFloatingPillRemovePillAction, createFloa
 import { IGameBoard } from "../model/IGameBoard";
 import { hasPillLanded } from "../gameLogic/collisionChecks";
 import { createAddInvalidatedPositionsAction, createAddPillToGameboardAction } from "../actions/GameBoard.actions";
-import { createGameSetFlowStateAction } from "../actions/Game.actions";
-import { FlowState } from "../states/stateMappings";
 import { inputSaga } from "./input.saga";
+import { createNextFlowStateAction, createQueueFlowStateAction } from "../actions/flowState.actions";
+import { FlowState } from "../states/stateMappings";
+
+export function* startPillRound() {
+    yield put(createQueueFlowStateAction(FlowState.THROW_IN_PILL));
+    yield put(createQueueFlowStateAction(FlowState.CONTROL_PILL));
+    yield put(createQueueFlowStateAction(FlowState.PLACING_PILL));
+    yield put(createQueueFlowStateAction(FlowState.HANDLE_MATCHES));
+    yield put(createNextFlowStateAction());
+}
 
 export function getPillPartPositions(pill: IPill): IGridPos[] {
     return pill.parts.map<IGridPos>((part: IGameObject) => {
@@ -75,12 +83,7 @@ export function* pillDropUpdate(isControlledPill: boolean) {
 
     // if all pills have landed, then we will do a flow state change
     if (haveAllPillsLanded) {
-        if (isControlledPill) {
-            yield put(createGameSetFlowStateAction(FlowState.PLACING_PILL));
-        }
-        else {
-            yield put(createGameSetFlowStateAction(FlowState.HANDLE_MATCHES));
-        }
+        yield put(createNextFlowStateAction());
     }
 }
 

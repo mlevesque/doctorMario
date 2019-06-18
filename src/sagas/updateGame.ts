@@ -1,9 +1,10 @@
 import { takeEvery, take, select, call, put, fork } from 'redux-saga/effects'
-import { GameAction, createGameRenderGameboard, createGameSetFlowStateAction } from '../actions/Game.actions';
+import { GameAction, createGameRenderGameboard } from '../actions/Game.actions';
 import { createUpdateInputAction } from '../actions/Input.actions';
 import { getFlowState, getFlowStateDelay } from './selectHelpers';
 import { AnyAction } from 'redux';
 import { FlowState, IFlowState, FLOW_STATES } from '../states/stateMappings';
+import { FlowStateAction } from '../actions/flowState.actions';
 
 
 
@@ -40,10 +41,12 @@ export function* mainUpdateSaga() {
 
 export function* flowStateChangeTriggerSaga() {
     let prevState: FlowState;
+    let nextState: FlowState;
     while(true) {
         prevState = yield select(getFlowState);
-        let action: AnyAction = yield take(GameAction.SET_FLOW_STATE);
-        yield call(flowStateChangeActionSaga, prevState, action.payload);
+        let action: AnyAction = yield take(FlowStateAction.NEXT_FLOW_STATE);
+        nextState = yield select(getFlowState);
+        yield fork(flowStateChangeActionSaga, prevState, nextState);
     }
 }
 

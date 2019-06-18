@@ -1,12 +1,10 @@
 import { AnyAction } from "redux";
-import { FlowState } from "../states/stateMappings";
 
 /**
  * General game actions.
  */
 export enum GameAction {
     UPDATE = 'UPDATE',
-    SET_FLOW_STATE = 'SET_FLOW_STATE',
     RENDER_GAMEBOARD = 'RENDER_GAMEBOARD',
 }
 
@@ -18,7 +16,4 @@ export function createGameUpdateAction(deltaTime: number): AnyAction {
 }
 export function createGameRenderGameboard(): AnyAction {
     return { type: GameAction.RENDER_GAMEBOARD };
-}
-export function createGameSetFlowStateAction(flowState: FlowState): AnyAction {
-    return { type: GameAction.SET_FLOW_STATE, payload: flowState };
 }

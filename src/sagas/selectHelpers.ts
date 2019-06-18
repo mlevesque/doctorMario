@@ -3,7 +3,7 @@ import { IGameBoard } from "../model/IGameBoard";
 import { IInputActions } from "../model/IInputActions";
 import { FlowState } from "../states/stateMappings";
 
-export function getFlowState(state: IGameState): FlowState { return state.flowState; }
+export function getFlowState(state: IGameState): FlowState { return state.flowStateQueue.length > 0 ? state.flowStateQueue[0]: null; }
 export function getFlowStateDelay(state: IGameState): number { return state.flowDelayTime; }
 
 export function getInputState(state: IGameState): IInputActions { return state.inputs; }

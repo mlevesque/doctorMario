@@ -1,9 +1,8 @@
 import { IGameState } from "../model/IGameState";
 import { ColorType, ObjectType, InputType } from "../model/enums";
-import { FlowState } from "../states/stateMappings";
 
 export const InitialGameState:IGameState = {
-    flowState: FlowState.START,
+    flowStateQueue: [null],
     flowDelayTime: 0,
 
     inputs: {
