@@ -1,42 +1,32 @@
 import { takeEvery, take, select, call, put, fork } from 'redux-saga/effects'
 import { GameAction, createGameRenderGameboard, createGameSetFlowStateAction } from '../actions/Game.actions';
 import { createUpdateInputAction } from '../actions/Input.actions';
-import { FlowState } from '../model/enums';
-import { controlPillInitSaga, floatingPillUpdateSaga } from './controlPill.saga';
 import { getFlowState, getFlowStateDelay } from './selectHelpers';
 import { AnyAction } from 'redux';
+import { FlowState, IFlowState, FLOW_STATES } from '../states/stateMappings';
 
-function* delayStateSaga(delay: number, nextState: FlowState) {
-    const delayTime: number = yield select(getFlowStateDelay);
-    if (delayTime > delay) {
-        yield put(createGameSetFlowStateAction(nextState));
-    }
-}
+
 
 function* flowStateChangeActionSaga(prevState: FlowState, nextState: FlowState) {
-    // call complete state sagas
-    switch (prevState) {
+    // end previous state
+    let state: IFlowState = FLOW_STATES[prevState];
+    if (state && state.onEnd) {
+        yield call(state.onEnd);
     }
 
-    // call initialize state sagas
-    switch (nextState) {
-        case FlowState.CONTROL_PILL:
-            yield call(controlPillInitSaga);
-            break;
+    // start next state
+    state = FLOW_STATES[nextState];
+    if (state && state.onStart) {
+        yield call(state.onStart);
     }
 }
 
 function* updateGameSaga() {
-    // branch off to correct logic based on game flow
+    // branch off to correct update logic based on game flow
     const flowState: FlowState = yield select(getFlowState);
-    switch (flowState) {
-        // Control pil state refers to when a single pill is falling and the player can control it
-        case FlowState.CONTROL_PILL:
-            yield call(floatingPillUpdateSaga, true);
-            break;
-        case FlowState.PLACING_PILL:
-            yield call(delayStateSaga, 500, FlowState.CONTROL_PILL);
-            break;
+    const state: IFlowState = FLOW_STATES[flowState];
+    if (state && state.onUpdate) {
+        yield call(state.onUpdate);
     }
 
     yield put(createUpdateInputAction());
@@ -47,6 +37,7 @@ function* updateGameSaga() {
 export function* mainUpdateSaga() {
     yield takeEvery(GameAction.UPDATE, updateGameSaga);
 }
+
 export function* flowStateChangeTriggerSaga() {
     let prevState: FlowState;
     while(true) {

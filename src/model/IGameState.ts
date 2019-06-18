@@ -1,6 +1,7 @@
 import { IGameBoard } from "./IGameBoard";
-import { ColorType, ObjectType, PillRotation, FlowState } from "./enums";
+import { ColorType, ObjectType, PillRotation } from "./enums";
 import { IInputActions } from "./IInputActions";
+import { FlowState } from "../states/stateMappings";
 
 /**
  * Positional data within the gameboard.

@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { FlowState } from "../model/enums";
+import { FlowState } from "../states/stateMappings";
 
 /**
  * General game actions.

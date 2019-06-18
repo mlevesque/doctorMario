@@ -1,19 +1,16 @@
-import { select, call, put } from 'redux-saga/effects';
-import { IControlledFloatingPill, IGridPos, IFloatingPills, IPill, IGameObject } from "../model/IGameState";
-import { getFloatingPillsState, getGameboardState, getDropTimeState, getCurrentDropIntervalState } from "./selectHelpers";
+import { IFloatingPills, IPill, IGridPos, IGameObject } from "../model/IGameState";
+import { select, put, call } from "redux-saga/effects";
+import { clonePill } from "../gameLogic/helpers";
+import { getDropTimeState, getCurrentDropIntervalState, getFloatingPillsState, getGameboardState } from "./selectHelpers";
+import { createSetDropTimeAction, createFloatingPillRemovePillAction, createFloatingPillUpdatePillAction } from "../actions/FloatingPill.actions";
 import { IGameBoard } from "../model/IGameBoard";
 import { hasPillLanded } from "../gameLogic/collisionChecks";
-import { createAddPillToGameboardAction, createAddInvalidatedPositionsAction } from "../actions/GameBoard.actions";
-import { IColorMatch } from "../model/IColorMatch";
-import { findColorMatches } from "../gameLogic/colorMatching";
-import { createFloatingPillAddPillAction, createFloatingPillRemovePillAction, createFloatingPillUpdatePillAction, createSetDropTimeAction } from "../actions/FloatingPill.actions";
-import { inputSaga } from './input.saga';
-import { generateFloatingPill } from '../gameLogic/generatePill';
-import { createGameSetFlowStateAction } from '../actions/Game.actions';
-import { FlowState } from '../model/enums';
-import { clonePill } from '../gameLogic/helpers';
+import { createAddInvalidatedPositionsAction, createAddPillToGameboardAction } from "../actions/GameBoard.actions";
+import { createGameSetFlowStateAction } from "../actions/Game.actions";
+import { FlowState } from "../states/stateMappings";
+import { inputSaga } from "./input.saga";
 
-function getPillPartPositions(pill: IPill): IGridPos[] {
+export function getPillPartPositions(pill: IPill): IGridPos[] {
     return pill.parts.map<IGridPos>((part: IGameObject) => {
         return {
             x: part.position.x + pill.position.x,
@@ -22,7 +19,7 @@ function getPillPartPositions(pill: IPill): IGridPos[] {
     });
 }
 
-function* pillDropSaga(isControlledPill: boolean) {
+export function* pillDropUpdate(isControlledPill: boolean) {
     // get list of pills
     const floatingPills: IFloatingPills = yield select(getFloatingPillsState);
     let pills: IPill[] = floatingPills.pillIds.map<IPill>((id: string) => clonePill(floatingPills.pills[id]));
@@ -36,7 +33,7 @@ function* pillDropSaga(isControlledPill: boolean) {
     yield put(createSetDropTimeAction(dropTime - (dropInterval * updateCount)));
 
     // handle each drop tick. Ideally, this should only iterate once
-    let haveAllPillsLanded: boolean = true;
+    let haveAllPillsLanded: boolean = updateCount > 0;
     let pillsRemoved: number = 0;
     while (updateCount > 0) {
 
@@ -77,24 +74,14 @@ function* pillDropSaga(isControlledPill: boolean) {
     } // end while
 
     // if all pills have landed, then we will do a flow state change
-    // if (haveAllPillsLanded) {
-    //     if (isControlledPill) {
-    //         yield put(createGameSetFlowStateAction(FlowState.PLACING_PILL));
-    //     }
-    //     else {
-    //         yield put(createGameSetFlowStateAction(FlowState.DESTROY_OBJECTS));
-    //     }
-    // }
-}
-
-
-export function* controlPillInitSaga() {
-    // add the floating pill to control
-    const gameboard: IGameBoard = yield select(getGameboardState);
-    const pill: IPill = yield call(generateFloatingPill, gameboard);
-    yield put(createFloatingPillAddPillAction(pill));
-
-    // @TODO Add failure check here
+    if (haveAllPillsLanded) {
+        if (isControlledPill) {
+            yield put(createGameSetFlowStateAction(FlowState.PLACING_PILL));
+        }
+        else {
+            yield put(createGameSetFlowStateAction(FlowState.HANDLE_MATCHES));
+        }
+    }
 }
 
 export function* floatingPillUpdateSaga(isControlledPill: boolean) {
@@ -116,5 +103,5 @@ export function* floatingPillUpdateSaga(isControlledPill: boolean) {
     }
 
     // handle pill drop
-    yield call(pillDropSaga, isControlledPill);
+    yield call(pillDropUpdate, isControlledPill);
 }

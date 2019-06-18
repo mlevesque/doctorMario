@@ -12,7 +12,6 @@ function findIntertionIndexRec(state: IFloatingPills, a: number, b: number, y: n
 
     // get center index
     let pivot: number = Math.floor(a + (b - a) / 2);
-    console.log("PIVOT " + pivot);
     const pivotY: number = state.pills[state.pillIds[pivot]].position.y;
     if (pivotY === y) {
         return pivot;
@@ -40,21 +39,14 @@ export function floatingPillsReducer(
         case FloatingPillAction.ADD_PILL:
             // add pill to hash object
             const pill: IPill = action.payload as IPill;
-            console.log("ADD PREV STATE - " + JSON.stringify(state));
             id = String(state.nextIdValue);
             let newHash: IPillHash = Object.assign({}, state.pills, {
                 [id]: clonePill(pill)
             });
 
-            console.log("MLEVESQUE");
-
-
             // figure out where to insert object into id array
             // we want to keep the array sorted by pill y position
             let insertIndex: number = findIntertionIndex(state, pill.position.y);
-
-            console.log("MLEVESQUE 2");
-
 
             let newState = {
                 pillIds: [...state.pillIds.slice(0, insertIndex),
@@ -63,8 +55,6 @@ export function floatingPillsReducer(
                 pills: newHash,
                 nextIdValue: state.nextIdValue + 1
             };
-
-            console.log("ADD " + JSON.stringify(newState));
             return newState;
 
 

@@ -1,7 +1,7 @@
 import { IGameState, IFloatingPills } from "../model/IGameState";
 import { IGameBoard } from "../model/IGameBoard";
-import { FlowState } from "../model/enums";
 import { IInputActions } from "../model/IInputActions";
+import { FlowState } from "../states/stateMappings";
 
 export function getFlowState(state: IGameState): FlowState { return state.flowState; }
 export function getFlowStateDelay(state: IGameState): number { return state.flowDelayTime; }

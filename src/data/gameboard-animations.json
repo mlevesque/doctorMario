@@ -1,7 +1,7 @@
 {
     "red-virus-animation": {
         "loop": true,
-        "interval": 500,
+        "interval": 20,
         "sprites": [
             "red-virus-1",
             "red-virus-2"
@@ -10,7 +10,7 @@
 
     "yellow-virus-animation": {
         "loop": true,
-        "interval": 500,
+        "interval": 20,
         "sprites": [
             "yellow-virus-1",
             "yellow-virus-2"
@@ -19,7 +19,7 @@
 
     "blue-virus-animation": {
         "loop": true,
-        "interval": 500,
+        "interval": 20,
         "sprites": [
             "blue-virus-1",
             "blue-virus-2"

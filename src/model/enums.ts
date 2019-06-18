@@ -53,17 +53,6 @@ export enum PillRotateAction {
     KICK_DOWN_RIGHT
 }
 
-/**
- * Values for all game flow states during gameplay.
- */
-export enum FlowState {
-    THROW_IN_PILL = 0,      // Mario throws in a new pill
-    CONTROL_PILL,           // Player moves and places pill
-    PLACING_PILL,           // Player controlled pill is in process of being placed
-    DESTROY_OBJECTS,        // game objects go through destroy animation around newly placed pill
-    DEBRIS_FALL             // remainder pill debris fall after destruction
-}
-
 export enum MatchDirection {
     VERTICAL = 0,
     HORIZONTAL

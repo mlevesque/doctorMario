@@ -21,7 +21,7 @@ const store: Store = createStore(gameReducers, InitialGameState, applyMiddleware
 
 let data: Table<ColorType> = buildVirusGameboard(8, 20, 4, 4, 4);
 store.dispatch(createBuildGameboardAction(data));
-store.dispatch(createFloatingPillAddPillAction(generateFloatingPill(store.getState().gameboard)));
+//store.dispatch(createFloatingPillAddPillAction(generateFloatingPill(store.getState().gameboard)));
 
 
 ReactDOM.render(

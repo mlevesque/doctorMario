@@ -3,7 +3,7 @@ import { InitialGameState } from "./InitialGameState";
 import { GameAction } from "../actions/Game.actions";
 
 // @TODO Make this more data driven
-const VIRUS_INTERVAL: number = 400;
+const VIRUS_INTERVAL: number = 200;
 const VIRUS_FRAME_COUNT: number = 2;
 
 export function virusGameboardAnimationReducer(

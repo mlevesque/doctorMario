@@ -1,6 +1,6 @@
-import { FlowState } from "../model/enums";
 import { InitialGameState } from "./InitialGameState";
 import { GameAction } from "../actions/Game.actions";
+import { FlowState } from "../states/stateMappings";
 
 export function flowStateReducer(state: FlowState = InitialGameState.flowState, action: any): FlowState {
     switch(action.type) {
