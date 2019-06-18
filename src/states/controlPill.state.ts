@@ -3,7 +3,7 @@ import { IPill, IFloatingPills } from "../model/IGameState";
 import { IGameBoard } from "../model/IGameBoard";
 import { generateFloatingPill } from "../gameLogic/generatePill";
 import { getGameboardState, getRegularDropIntervalState, getFloatingPillsState } from "../sagas/selectHelpers";
-import { createFloatingPillAddPillAction, createSetCurrentDropIntervalAction } from "../actions/FloatingPill.actions";
+import { createFloatingPillAddPillAction, createSetCurrentDropIntervalAction, createSetDropTimeAction } from "../actions/FloatingPill.actions";
 import { pillDropUpdate } from "../sagas/pillUpdateSagas";
 import { clonePill } from "../gameLogic/helpers";
 import { inputSaga } from "../sagas/input.saga";
@@ -17,6 +17,9 @@ export function* controlPillStart() {
     // reset drop interval
     const interval: number = yield select(getRegularDropIntervalState);
     yield put(createSetCurrentDropIntervalAction(interval));
+
+    // reset drop time
+    yield put(createSetDropTimeAction(0));
 
     // @TODO Add failure check here
 }
