@@ -1,6 +1,8 @@
-import { call } from "redux-saga/effects";
-import { startPillRound } from "../sagas/pillUpdateSagas";
+import { call, put } from "redux-saga/effects";
+import { setupPillRound } from "../sagas/pillUpdateSagas";
+import { createNextFlowStateAction } from "../actions/flowState.actions";
 
 export function* startStart() {
-    yield call(startPillRound);
+    yield call(setupPillRound);
+    yield put(createNextFlowStateAction());
 }

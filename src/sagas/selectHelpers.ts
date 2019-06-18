@@ -1,4 +1,4 @@
-import { IGameState, IFloatingPills } from "../model/IGameState";
+import { IGameState, IFloatingPills, IGridPos } from "../model/IGameState";
 import { IGameBoard } from "../model/IGameBoard";
 import { IInputActions } from "../model/IInputActions";
 import { FlowState } from "../states/stateMappings";
@@ -10,6 +10,7 @@ export function getInputState(state: IGameState): IInputActions { return state.i
 export function getSlideCooldownState(state: IGameState): number { return state.slideCooldown; }
 
 export function getGameboardState(state: IGameState): IGameBoard { return state.gameboard; }
+export function getInvalidatedPositionsState(state: IGameState): IGridPos[] { return state.invalidatedPositions; }
 
 export function getFloatingPillsState(state: IGameState): IFloatingPills { return state.floatingPills; }
 export function getCurrentDropIntervalState(state: IGameState): number { return state.currentDropInterval; }

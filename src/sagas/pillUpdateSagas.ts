@@ -10,12 +10,11 @@ import { inputSaga } from "./input.saga";
 import { createNextFlowStateAction, createQueueFlowStateAction } from "../actions/flowState.actions";
 import { FlowState } from "../states/stateMappings";
 
-export function* startPillRound() {
+export function* setupPillRound() {
     yield put(createQueueFlowStateAction(FlowState.THROW_IN_PILL));
     yield put(createQueueFlowStateAction(FlowState.CONTROL_PILL));
     yield put(createQueueFlowStateAction(FlowState.PLACING_PILL));
     yield put(createQueueFlowStateAction(FlowState.HANDLE_MATCHES));
-    yield put(createNextFlowStateAction());
 }
 
 export function getPillPartPositions(pill: IPill): IGridPos[] {
@@ -53,6 +52,7 @@ export function* pillDropUpdate(isControlledPill: boolean) {
 
             // check if pill has landed
             if (hasPillLanded(pill, gameboard)) {
+                console.log("LANDED");
                 
                 // if we are not controlling the pills, then we will place them immediately
                 if (!isControlledPill) {

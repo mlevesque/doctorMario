@@ -2,7 +2,8 @@ import { controlPillStart, controlPillUpdate } from "./controlPill.state";
 import { startStart } from "./start.state";
 import { placingPillStart, placingPillEnd, placingPillUpdate } from "./placingPill.state";
 import { throwInPillStart } from "./throwInPill.state";
-import { handleMatchesStart } from "./handleMatches.state";
+import { handleMatchesStart, handleMatchesUpdate } from "./handleMatches.state";
+import { debrisFallUpdate } from "./debrisFall.state";
 
 /**
  * Values for all game flow states during gameplay.
@@ -49,12 +50,12 @@ export const FLOW_STATES: IFlowStateMappings = {
     },
     [FlowState.HANDLE_MATCHES]: {
         onStart: handleMatchesStart,
-        onUpdate: null,
+        onUpdate: handleMatchesUpdate,
         onEnd: null
     },
     [FlowState.DEBRIS_FALL]: {
         onStart: null,
-        onUpdate: null,
+        onUpdate: debrisFallUpdate,
         onEnd: null
     }
 }
