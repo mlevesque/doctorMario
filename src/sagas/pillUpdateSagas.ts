@@ -26,7 +26,7 @@ export function getPillPartPositions(pill: IPill): IGridPos[] {
     });
 }
 
-export function* pillDropUpdate(isControlledPill: boolean) {
+export function* pillDropUpdate(setLandedPills: boolean) {
     // get list of pills
     const floatingPills: IFloatingPills = yield select(getFloatingPillsState);
     let pills: IPill[] = floatingPills.pillIds.map<IPill>((id: string) => clonePill(floatingPills.pills[id]));
@@ -39,23 +39,21 @@ export function* pillDropUpdate(isControlledPill: boolean) {
     // update drop time
     yield put(createSetDropTimeAction(dropTime - (dropInterval * updateCount)));
 
-    // handle each drop tick. Ideally, this should only iterate once
-    let haveAllPillsLanded: boolean = updateCount > 0;
-    let pillsRemoved: number = 0;
-    while (updateCount > 0) {
-
+    // if it is time to drop, then we do so
+    if (updateCount > 0) {
         // iterate through each pill (we use for loop instead of forEach due to needing to yield)
         let i: number;
+        let pillsRemoved: number = 0;
+        let pillsLanded: number = 0;
         for(i = 0; i < pills.length; ++i) {
             let pill: IPill = pills[i];
             const gameboard: IGameBoard = yield select(getGameboardState);
 
             // check if pill has landed
             if (hasPillLanded(pill, gameboard)) {
-                console.log("LANDED");
                 
-                // if we are not controlling the pills, then we will place them immediately
-                if (!isControlledPill) {
+                // if we should set teh landed pills, then do so
+                if (setLandedPills) {
                     // invalidate pill positions for match checking later
                     yield put(createAddInvalidatedPositionsAction(getPillPartPositions(pill)));
                     // add pill to gameboard
@@ -65,6 +63,9 @@ export function* pillDropUpdate(isControlledPill: boolean) {
                     // increment number of pills removed (allows us to send remove the proper index)
                     pillsRemoved++;
                 }
+
+                // increment the number of pills landed
+                pillsLanded++;
             }
 
             // if pill has not landed, then we drop it
@@ -72,39 +73,12 @@ export function* pillDropUpdate(isControlledPill: boolean) {
                 // drop
                 pill.position.y++;
                 yield put(createFloatingPillUpdatePillAction(i - pillsRemoved, pill));
-
-                // mark that not all pills will land if we are on the last update count for this frame
-                haveAllPillsLanded = updateCount > 1;
             }
         }// next i
 
-        updateCount--;
-    } // end while
-
-    // if all pills have landed, then we will do a flow state change
-    if (haveAllPillsLanded) {
-        yield put(createNextFlowStateAction());
-    }
-}
-
-export function* floatingPillUpdateSaga(isControlledPill: boolean) {
-    // if there is no floating pill to control, then something has gone wrong.
-    // Don't do anything for now (but maybe add some sort of handling of this later?)
-    let floatingPills: IFloatingPills = yield select(getFloatingPillsState);
-    if (floatingPills.pillIds.length == 0) {
-        return;
-    }
-
-    if (isControlledPill) {
-        // get what should be just a single pill to control,
-        // clone it because we will be modifiying it
-        let clonedPill: IPill = clonePill(floatingPills.pills[floatingPills.pillIds[0]]);
-
-        // handle input
-        const gameboard: IGameBoard = yield select(getGameboardState);
-        yield call(inputSaga, clonedPill, gameboard);
-    }
-
-    // handle pill drop
-    yield call(pillDropUpdate, isControlledPill);
+        // if all pills have landed, then we will do a flow state change
+        if (pillsLanded >= pills.length) {
+            yield put(createNextFlowStateAction());
+        }
+    }// end if
 }
