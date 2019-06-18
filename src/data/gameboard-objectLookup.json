@@ -12,7 +12,7 @@
             "PILL_LEFT": "red-pill-left",
             "PILL_RIGHT": "red-pill-right",
             "PILL_SINGLE": "red-pill-single",
-            "DESTROY": "red-pill-destroy"
+            "DESTROYED": "red-pill-destroy"
         },
         "YELLOW": {
             "PILL_TOP": "yellow-pill-top",
@@ -20,7 +20,7 @@
             "PILL_LEFT": "yellow-pill-left",
             "PILL_RIGHT": "yellow-pill-right",
             "PILL_SINGLE": "yellow-pill-single",
-            "DESTROY": "yellow-pill-destroy"
+            "DESTROYED": "yellow-pill-destroy"
         },
         "BLUE": {
             "PILL_TOP": "blue-pill-top",
@@ -28,7 +28,7 @@
             "PILL_LEFT": "blue-pill-left",
             "PILL_RIGHT": "blue-pill-right",
             "PILL_SINGLE": "blue-pill-single",
-            "DESTROY": "blue-pill-destroy"
+            "DESTROYED": "blue-pill-destroy"
         }
     }
 }

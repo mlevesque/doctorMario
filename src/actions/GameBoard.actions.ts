@@ -25,8 +25,8 @@ export function createBuildGameboardAction(data: Table<ColorType>): AnyAction {
 export function createAddPillToGameboardAction(pill: IPill): AnyAction {
     return { type: GameboardAction.ADD_PILL_TO_GAMEBOARD, payload: pill };
 }
-export function createDestroyObjectsInGameboardAction(data: Table<boolean>): AnyAction {
-    return { type: GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD, payload: data };
+export function createDestroyObjectsInGameboardAction(positions: IGridPos[]): AnyAction {
+    return { type: GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD, payload: positions };
 }
 export function createPurgeDestroyObjectsAction(): AnyAction {
     return { type: GameboardAction.PURGE_DESTROY_OBJECTS };

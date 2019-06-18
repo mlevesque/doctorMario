@@ -50,6 +50,7 @@ function constructMatchKey(colorMatch: IColorMatch): string {
     return colorMatch.startPos.x.toString() + '-' + colorMatch.startPos.y.toString() + '-' + colorMatch.direction.toString();
 }
 
+
 export function findColorMatches(gameboard: IGameBoard, dirtySpaces: IGridPos[]): IColorMatch[] {
     let allUniqueMatches: IUniqueMatches = {};
     dirtySpaces.forEach((pos: IGridPos) => {
@@ -89,3 +90,30 @@ export function findColorMatches(gameboard: IGameBoard, dirtySpaces: IGridPos[])
         return allUniqueMatches[key];
     });
 }
+
+export function getAllUniqueMatchPositions(width: number, height: number, colorMatches: IColorMatch[]): IGridPos[] {
+    let result: IGridPos[] = [];
+    let visited: Table<boolean> = new Table<boolean>(width, height, false);
+    let pos: number[] = [0, 0];
+    let posIndex: number;
+    let i: number;
+    colorMatches.forEach((value: IColorMatch) => {
+        // set starting position
+        pos[X] = value.startPos.x;
+        pos[Y] = value.startPos.y;
+
+        // determine whether X or Y will be incremented based on match direction
+        posIndex = value.direction == MatchDirection.HORIZONTAL ? 0 : 1;
+
+        // iterate over length of match and add position to results
+        for (i = 0; i < value.length; ++i) {
+            if (!visited.getValue(pos[X], pos[Y])) {
+                result.push({x: pos[X], y: pos[Y]});
+                visited.setValue(pos[X], pos[Y], true);
+            }
+            pos[posIndex]++;
+        }
+    });
+    return result;
+}
+

@@ -104,32 +104,41 @@ export function gameboardReducer(state: IGameBoard = InitialGameState.gameboard,
         ///////////////////////////////////////////////////////////////////////////////////////////
         // DESTROY OBJECTS IN GAMEBOARD
         case GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD:
-            let destroyTable: Table<boolean> = action.payload as Table<boolean>;
+            // copy grid
             newState = Object.assign({}, state);
             newState.grid = state.grid.map( (row: IGridSpace[], y: number) => {
                 return row.map( (value: IGridSpace, x: number) => {
                     if (value == null) {
                         return null;
                     }
-                    let newSpace: IGridSpace = Object.assign({}, value);
-                    newSpace.type = ObjectType.DESTROYED;
-                    return newSpace;
+                    return Object.assign({}, value);
                 });
+            });
+
+            // mark all grid positions as destroyed
+            const destroyPositions: IGridPos[] = action.payload as IGridPos[];
+            destroyPositions.forEach((value: IGridPos) => {
+                // is valid to mark?
+                if (value.x >= 0 && value.x < newState.width
+                    && value.y >= 0 && value.y < newState.height
+                    && newState.grid[value.y][value.x] != null) {
+                        newState.grid[value.y][value.x].type = ObjectType.DESTROYED;
+                    }
             });
             return newState;
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // DESTROY OBJECTS IN GAMEBOARD
-        case GameboardAction.DESTROY_OBJECTS_IN_GAMEBOARD:
+        // PURGE DESTROY OBJECTS IN GAMEBOARD
+        case GameboardAction.PURGE_DESTROY_OBJECTS:
             newState = Object.assign({}, state);
             newState.grid = state.grid.map( (row: IGridSpace[], y: number) => {
                 return row.map( (value: IGridSpace, x: number) => {
-                    if (value != null && value.type == ObjectType.DESTROYED) {
+                    if (value == null || value.type == ObjectType.DESTROYED) {
                         return null;
                     }
                     else {
-                        return Object.assign({}, )
+                        return Object.assign({}, value);
                     }
                 });
             });

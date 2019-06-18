@@ -6,7 +6,7 @@
     "red-pill-left":        {"x":128, "y":0, "w":32, "h":32},
     "red-pill-right":       {"x":160, "y":0, "w":32, "h":32},
     "red-pill-single":      {"x":192, "y":0, "w":32, "h":32},
-    "red-pill-destroy":     {"x":160, "y":0, "w":32, "h":32},
+    "red-pill-destroy":     {"x":224, "y":0, "w":32, "h":32},
 
     "yellow-virus-1":          {"x":0,   "y":32, "w":32, "h":32},
     "yellow-virus-2":          {"x":32,  "y":32, "w":32, "h":32},
@@ -15,7 +15,7 @@
     "yellow-pill-left":        {"x":128, "y":32, "w":32, "h":32},
     "yellow-pill-right":       {"x":160, "y":32, "w":32, "h":32},
     "yellow-pill-single":      {"x":192, "y":32, "w":32, "h":32},
-    "yellow-pill-destroy":     {"x":160, "y":32, "w":32, "h":32},
+    "yellow-pill-destroy":     {"x":224, "y":32, "w":32, "h":32},
 
     "blue-virus-1":          {"x":0,   "y":64, "w":32, "h":32},
     "blue-virus-2":          {"x":32,  "y":64, "w":32, "h":32},
@@ -24,5 +24,5 @@
     "blue-pill-left":        {"x":128, "y":64, "w":32, "h":32},
     "blue-pill-right":       {"x":160, "y":64, "w":32, "h":32},
     "blue-pill-single":      {"x":192, "y":64, "w":32, "h":32},
-    "blue-pill-destroy":     {"x":160, "y":64, "w":32, "h":32}
+    "blue-pill-destroy":     {"x":224, "y":64, "w":32, "h":32}
 }

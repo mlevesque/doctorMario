@@ -51,8 +51,8 @@ export function* pillDropUpdate(setLandedPills: boolean) {
 
             // check if pill has landed
             if (hasPillLanded(pill, gameboard)) {
-                
-                // if we should set teh landed pills, then do so
+
+                // if we should set the landed pills, then do so
                 if (setLandedPills) {
                     // invalidate pill positions for match checking later
                     yield put(createAddInvalidatedPositionsAction(getPillPartPositions(pill)));
