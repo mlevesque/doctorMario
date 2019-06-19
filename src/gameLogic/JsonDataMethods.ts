@@ -1,6 +1,6 @@
-import gameboardObjectLookupJson from '../data/gameboard-objectLookup.json';
-import animationJson from '../data/gameboard-animations.json';
-import spriteJson from '../data/gameboard-sprites.json';
+import gameboardObjectLookupJson from '../data/objectLookup.json';
+import animationJson from '../data/animations.json';
+import spriteJson from '../data/sprites.json';
 
 import { ColorType, ObjectType } from '../model/enums.js';
 import { IGameboardObjectLookupJson, 

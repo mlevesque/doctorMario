@@ -1,6 +1,6 @@
 import { setupPillRound } from "../sagas/pillUpdateSagas";
 import { call, select, put } from "redux-saga/effects";
-import { IPill, IGridPos } from "../model/IGameState";
+import { IGridPos } from "../model/IGameState";
 import { gatherDebris, IDebrisResults } from "../gameLogic/debrisGathering";
 import { IGameBoard } from "../model/IGameBoard";
 import { getGameboardState, getInvalidatedPositionsState, getFlowStateDelay } from "../sagas/selectHelpers";
@@ -10,6 +10,7 @@ import { createClearInvalidatedPositionsAction, createPurgeDestroyObjectsAction,
 import { IColorMatch } from "../model/IColorMatch";
 import { findColorMatches, getAllUniqueMatchPositions } from "../gameLogic/colorMatching";
 import { createFloatingPillSetPillsAction } from "../actions/FloatingPill.actions";
+import configJson from "../data/config.json";
 
 function* setupDestruction(gameboard: IGameBoard, matches: IColorMatch[]) {
     // convert matches to list of grid positions
@@ -79,7 +80,7 @@ export function* handleMatchesUpdate() {
     const delayTime: number = yield select(getFlowStateDelay);
 
     // if we have reached our designated delay, then move on to next state
-    if (delayTime > 1000) {
+    if (delayTime > configJson.destroyDelay) {
         yield call(completeState);
     }
 }

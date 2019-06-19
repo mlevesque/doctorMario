@@ -1,0 +1,5 @@
+{
+    "acceleratedDropInterval": 40,
+    "destroyDelay": 800,
+    "debrisDropInterval": 200
+}

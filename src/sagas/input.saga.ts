@@ -9,12 +9,12 @@ import { InputType } from "../model/enums";
 import { canPillSlideLeft, canPillSlideRight } from "../gameLogic/collisionChecks";
 import { IGameBoard } from "../model/IGameBoard";
 import { IPill } from "../model/IGameState";
-import { clonePill } from "../gameLogic/helpers";
 import { createResetSlideCooldownAction } from "../actions/Input.actions";
 import { rotatePill } from "../gameLogic/pillRotation";
 import { createFloatingPillUpdatePillAction, 
          createSetCurrentDropIntervalAction, 
          createSetDropTimeAction} from "../actions/FloatingPill.actions";
+import configJson from "../data/config.json";
 
 function isOverSlideCooldown(cooldownTime: number): boolean {
     return cooldownTime > 150;
@@ -77,9 +77,9 @@ export function* inputSaga(pill: IPill, gameboard: IGameBoard) {
         //  to adjust the drop time. This fixes the issue of the pill dropping
         //  down too quickly when pressing down
         const oldInterval: number = yield select(getCurrentDropIntervalState);
-        let diff = oldInterval - 100;
+        let diff = oldInterval - configJson.acceleratedDropInterval;
 
-        yield put(createSetCurrentDropIntervalAction(100));
+        yield put(createSetCurrentDropIntervalAction(configJson.acceleratedDropInterval));
 
         let dropTime: number = yield select(getDropTimeState);
         dropTime = Math.max(dropTime - diff, 0);

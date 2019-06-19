@@ -46,8 +46,8 @@ export interface ISpriteAnimationJson {
  * Describes the slice data for a sprite from an atlas.
  */
 export interface ISprite {
-    x: number,
-    y: number,
+    x: number;
+    y: number;
     w: number;
     h: number;
 }
@@ -57,4 +57,13 @@ export interface ISprite {
  */
 export interface ISpriteJson {
     [spriteId: string]: ISprite;
+}
+
+
+/////////////////////////////////////////////////////////////////////////
+// CONFIG JSON
+export interface IConfigJson {
+    acceleratedDropInterval: number;
+    destroyDelay: number;
+    debrisDropInterval: number;
 }
