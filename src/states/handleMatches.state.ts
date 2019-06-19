@@ -1,7 +1,7 @@
 import { setupPillRound } from "../sagas/pillUpdateSagas";
 import { call, select, put } from "redux-saga/effects";
 import { IPill, IGridPos } from "../model/IGameState";
-import { gatherDebris } from "../gameLogic/debrisGathering";
+import { gatherDebris, IDebrisResults } from "../gameLogic/debrisGathering";
 import { IGameBoard } from "../model/IGameBoard";
 import { getGameboardState, getInvalidatedPositionsState, getFlowStateDelay } from "../sagas/selectHelpers";
 import { createQueueFlowStateAction, createNextFlowStateAction } from "../actions/flowState.actions";
@@ -9,6 +9,7 @@ import { FlowState } from "./stateMappings";
 import { createClearInvalidatedPositionsAction, createPurgeDestroyObjectsAction, createAddInvalidatedPositionsAction, createDestroyObjectsInGameboardAction } from "../actions/GameBoard.actions";
 import { IColorMatch } from "../model/IColorMatch";
 import { findColorMatches, getAllUniqueMatchPositions } from "../gameLogic/colorMatching";
+import { createFloatingPillSetPillsAction } from "../actions/FloatingPill.actions";
 
 function* setupDestruction(gameboard: IGameBoard, matches: IColorMatch[]) {
     // convert matches to list of grid positions
@@ -29,15 +30,15 @@ function* completeState() {
     // gather debris
     const gameboard: IGameBoard = yield select(getGameboardState);
     const dirtySpaces: IGridPos[] = yield select(getInvalidatedPositionsState);
-    const debris: IPill[] = gatherDebris(gameboard, dirtySpaces);
+    const debris: IDebrisResults = gatherDebris(gameboard, dirtySpaces);
 
     // clear dirty spaces
     yield put(createClearInvalidatedPositionsAction());
 
     // if there is debris, then initiate debris drop cycle
-    if (debris.length > 0) {
-        //@TODO add debris to floating pills
-
+    if (debris.pills.length > 0) {
+        yield put(createFloatingPillSetPillsAction(debris.pills));
+        yield put(createDestroyObjectsInGameboardAction(debris.positions));
         yield put(createQueueFlowStateAction(FlowState.DEBRIS_FALL));
         yield put(createQueueFlowStateAction(FlowState.HANDLE_MATCHES));
     }

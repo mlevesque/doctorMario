@@ -33,14 +33,39 @@ export function floatingPillsReducer(
                             action: AnyAction): IFloatingPills {
     let index: number;
     let id: string;
+    let newHash: IPillHash
     switch(action.type) {
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // SET PILLS
+        case FloatingPillAction.SET_PILLS:
+            // first sort list of pills by y position, descending
+            let pills: IPill[] = action.payload as IPill[];
+            pills.sort((a: IPill, b: IPill) => {
+                return b.position.y - a.position.y;
+            });
+
+            // build hash and list
+            newHash = {};
+            let newList: string[] = [];
+            pills.forEach((value: IPill, index: number) => {
+                id = String(index);
+                newHash[id] = clonePill(value);
+                newList.push(id);
+            });
+            return {
+                pillIds: newList,
+                pills: newHash,
+                nextIdValue: newList.length
+            };
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // ADD PILL
         case FloatingPillAction.ADD_PILL:
             // add pill to hash object
             const pill: IPill = action.payload as IPill;
             id = String(state.nextIdValue);
-            let newHash: IPillHash = Object.assign({}, state.pills, {
+            newHash = Object.assign({}, state.pills, {
                 [id]: clonePill(pill)
             });
 
@@ -48,14 +73,13 @@ export function floatingPillsReducer(
             // we want to keep the array sorted by pill y position
             let insertIndex: number = findIntertionIndex(state, pill.position.y);
 
-            let newState = {
+            return {
                 pillIds: [...state.pillIds.slice(0, insertIndex),
                           id,
                           ...state.pillIds.slice(insertIndex)],
                 pills: newHash,
                 nextIdValue: state.nextIdValue + 1
             };
-            return newState;
 
 
         

@@ -2,6 +2,7 @@ import { AnyAction } from "redux";
 import { IGridPos, IPill } from "../model/IGameState";
 
 export enum FloatingPillAction {
+    SET_PILLS = 'SET_PILLS',
     ADD_PILL = 'ADD_PILL',
     REMOVE_PILL = 'REMOVE_PILL',
     UPDATE_PILL = 'UPDATE_PILL',
@@ -14,6 +15,9 @@ export enum FloatingPillAction {
 /**
  * Action Creators
  */
+export function createFloatingPillSetPillsAction(pills: IPill[]): AnyAction {
+    return { type: FloatingPillAction.SET_PILLS, payload: pills };
+}
 export function createFloatingPillAddPillAction(pill: IPill): AnyAction {
     return { type: FloatingPillAction.ADD_PILL, payload: pill };
 }

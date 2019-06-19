@@ -1,5 +1,6 @@
 import { IGridPos, IPill, IGameObject } from "../model/IGameState";
 import { IGridSpace, IGameBoard } from "../model/IGameBoard";
+import { Table } from "../model/Table";
 
 export function clonePill(pill: IPill): IPill {
     return {
@@ -11,6 +12,16 @@ export function clonePill(pill: IPill): IPill {
             });
         })
     }
+}
+
+export function convertGameboardToTable(gameboard: IGameBoard): Table<IGridSpace> {
+    let table: Table<IGridSpace> = new Table<IGridSpace>(gameboard.width, gameboard.height, null);
+    gameboard.grid.forEach((row: IGridSpace[], y: number) => {
+        row.forEach((value: IGridSpace, x: number) => {
+            table.setValue(x, y, value);
+        });
+    });
+    return table;
 }
 
 export function isOutOfBounds(pos: IGridPos, gameboard: IGameBoard): boolean {
