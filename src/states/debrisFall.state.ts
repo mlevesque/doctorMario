@@ -8,5 +8,5 @@ export function* debrisFallStart() {
 }
 
 export function* debrisFallUpdate() {
-    yield call(pillDropUpdate, true);
+    yield call(pillDropUpdate);
 }

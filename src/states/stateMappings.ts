@@ -1,6 +1,5 @@
-import { controlPillStart, controlPillUpdate } from "./controlPill.state";
+import { controlPillStart, controlPillUpdate, controlPillEnd } from "./controlPill.state";
 import { startStart } from "./start.state";
-import { placingPillStart, placingPillEnd, placingPillUpdate } from "./placingPill.state";
 import { throwInPillStart } from "./throwInPill.state";
 import { handleMatchesStart, handleMatchesUpdate, handleMatchesEnd } from "./handleMatches.state";
 import { debrisFallUpdate, debrisFallStart } from "./debrisFall.state";
@@ -41,12 +40,7 @@ export const FLOW_STATES: IFlowStateMappings = {
     [FlowState.CONTROL_PILL]: {
         onStart: controlPillStart,
         onUpdate: controlPillUpdate,
-        onEnd: null
-    },
-    [FlowState.PLACING_PILL]: {
-        onStart: placingPillStart,
-        onUpdate: placingPillUpdate,
-        onEnd: placingPillEnd
+        onEnd: controlPillEnd
     },
     [FlowState.HANDLE_MATCHES]: {
         onStart: handleMatchesStart,
