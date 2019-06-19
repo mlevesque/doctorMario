@@ -178,10 +178,10 @@ export function rotatePill(pill: IPill, gameboard: IGameBoard): boolean {
     // perform kick if we need to
     switch (action) {
         case PillRotateAction.KICK_DOWN:
-            pill.position.y--;
+            pill.position.y++;
             break;
         case PillRotateAction.KICK_DOWN_RIGHT:
-            pill.position.y--;
+            pill.position.y++;
             pill.position.x++;
             break;
         case PillRotateAction.KICK_LEFT:
