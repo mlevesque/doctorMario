@@ -162,7 +162,7 @@ export function gatherDebris(gameboard: IGameBoard, dirtySpaces: IGridPos[]): ID
         visited.setValue(value.x, value.y, true);
     });
 
-    // handle special case for side pill halves that were connected to pills that got destroyed
+    // handle special cases for side and bottom pills halves that were connected to pills that got destroyed
     let space: IGridSpace;
     let pos: IGridPos;
     dirtySpaces.forEach((value: IGridPos) => {
@@ -179,6 +179,14 @@ export function gatherDebris(gameboard: IGameBoard, dirtySpaces: IGridPos[]): ID
         space = gameTable.getValue(pos.x, pos.y);
         if (shouldConsiderSpace(space, pos, visited)
                 && space.type == ObjectType.PILL_RIGHT) {
+            resolveSpace(pos, gameTable, queue, visited, pills, positions);
+        }
+
+        // build pill on bottom if connected
+        pos = {x: value.x, y: value.y + 1};
+        space = gameTable.getValue(pos.x, pos.y);
+        if (shouldConsiderSpace(space, pos, visited)
+                && space.type == ObjectType.PILL_BOTTOM) {
             resolveSpace(pos, gameTable, queue, visited, pills, positions);
         }
     });
