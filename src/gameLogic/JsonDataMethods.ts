@@ -41,13 +41,21 @@ export function getSpriteFromId(spriteId: string): ISprite {
 }
 
 /**
+ * Returns the animation with the given animation id.
+ * @param animationId 
+ */
+export function getAnimationFromId(animationId: string): ISpriteAnimationSchema {
+    return (animationJson as ISpriteAnimationJsonSchema)[animationId];
+}
+
+/**
  * Returns the sprite data for the given animation id and frame count. If not found, then
  * returns null.
  * @param animationId 
  * @param frameNumber 
  */
 export function getSpriteFromAnimation(animationId: string, frameNumber: number): ISprite {
-    const animation: ISpriteAnimationSchema = (animationJson as ISpriteAnimationJsonSchema)[animationId];
+    const animation: ISpriteAnimationSchema = getAnimationFromId(animationId);
     if (animation == null || frameNumber >= animation.animationFrames.length) {
         return null;
     }

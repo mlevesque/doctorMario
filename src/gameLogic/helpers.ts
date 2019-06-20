@@ -1,4 +1,4 @@
-import { IGridPos, IPill, IGameObject } from "../model/IGameState";
+import { IGridPos, IPill, IGameObject, ISpriteAnimationGroup } from "../model/IGameState";
 import { IGridSpace, IGameBoard } from "../model/IGameBoard";
 import { Table } from "../model/Table";
 
@@ -34,4 +34,10 @@ export function getGridSpace(pos: IGridPos, gameboard: IGameBoard): IGridSpace {
     }
     let result: IGridSpace = gameboard.grid[pos.y][pos.x];
     return result;
+}
+
+function cloneSpriteAnimationGroup(group: ISpriteAnimationGroup): ISpriteAnimationGroup {
+    return Object.assign({}, group, {
+        animationIdQueue: [...group.animationIdQueue]
+    });
 }

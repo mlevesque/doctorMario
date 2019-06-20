@@ -5,8 +5,7 @@ import { getFlowState, getFlowStateDelay } from './selectHelpers';
 import { AnyAction } from 'redux';
 import { FlowState, IFlowState, FLOW_STATES } from '../states/stateMappings';
 import { FlowStateAction } from '../actions/flowState.actions';
-
-
+import { mainSpriteAnimationSaga } from './animation.saga';
 
 function* flowStateChangeActionSaga(prevState: FlowState, nextState: FlowState) {
     // end previous state
@@ -53,4 +52,5 @@ export function* flowStateChangeTriggerSaga() {
 export function* rootSaga () {
     yield fork(mainUpdateSaga);
     yield fork(flowStateChangeTriggerSaga);
+    yield fork(mainSpriteAnimationSaga);
 }
