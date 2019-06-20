@@ -5,6 +5,7 @@ import { ISpriteAnimationStore, ISpriteAnimationGroup } from "../model/IGameStat
 import { getSpriteAnimationGroupsState } from "./selectHelpers";
 import { ISpriteAnimationSchema, ISpriteAnimationFrameSchema } from "../model/JsonScemas";
 import { getAnimationFromId } from "../gameLogic/JsonDataMethods";
+import { GameAction } from "../actions/Game.actions";
 
 function getCurrentAnimation(animationIdQueue: string[]): ISpriteAnimationSchema {
     return animationIdQueue.length > 0 ? getAnimationFromId(animationIdQueue[0]) : null;
@@ -83,7 +84,7 @@ function* updateAllAnimationsSaga(deltaTime: number) {
 
 export function* mainSpriteAnimationSaga() {
     while(true) {
-        const action: AnyAction = yield take(SpriteAnimationAction.UPDATE_ANIMATION);
+        const action: AnyAction = yield take(GameAction.UPDATE);
         yield call(updateAllAnimationsSaga, action.payload);
     }
 }
