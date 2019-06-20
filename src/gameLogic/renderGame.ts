@@ -1,6 +1,6 @@
-import { ISprite, ISpriteAnimation } from "../model/JsonScemas";
+import { ISprite } from "../model/JsonScemas";
 import { ColorType, ObjectType } from "../model/enums";
-import { getAnimationSetFromId, getVirusAnimationId, getSpriteFromId, getPillSpriteId } from "./JsonDataMethods";
+import { getVirusAnimationId, getPillSpriteId, getSpriteFromAnimation, getSpriteFromId } from "./JsonDataMethods";
 import { IGridSpace, IGameBoard } from "../model/IGameBoard";
 import { GRID_SIZE } from "../constants";
 import { IPill, IGameObject, IGridPos } from "../model/IGameState";
@@ -20,8 +20,7 @@ export interface IRenderGameParams {
  * @param frameIndex 
  */
 function getSpriteForVirus(color: ColorType, frameIndex: number): ISprite {
-    let animation: ISpriteAnimation = getAnimationSetFromId(getVirusAnimationId(color));
-    return getSpriteFromId(animation.sprites[frameIndex]);
+    return getSpriteFromAnimation(getVirusAnimationId(color), frameIndex);
 }
 
 /**

@@ -23,21 +23,30 @@ export interface IGameboardObjectLookupJson {
 
 /////////////////////////////////////////////////////////////////////////
 // ANIMATION JSON
+const INFINITE_LOOPS: number = -1;
 /**
- * Describes data for a sprite animation.
+ * Schema for a single animation frame.
  */
-export interface ISpriteAnimation {
-    loop: boolean;
-    interval: number;
-    sprites: string[];
+export interface ISpriteAnimationFrameSchema {
+    spriteId: string;
+    frameInterval: number;
 }
 
 /**
- * Schema for a sprite animation Json file.
+ * Schema for a single animation.
  */
-export interface ISpriteAnimationJson {
-    [animationId: string]: ISpriteAnimation;
+export interface ISpriteAnimationSchema {
+    animationFrames: ISpriteAnimationFrameSchema[];
+    numberOfLoops: number;
 }
+
+/**
+ * Schema for all defined animations.
+ */
+export interface ISpriteAnimationJsonSchema {
+    [animationId: string]: ISpriteAnimationSchema;
+}
+
 
 
 /////////////////////////////////////////////////////////////////////////

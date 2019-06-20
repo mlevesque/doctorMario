@@ -1,28 +1,43 @@
 {
     "red-virus-animation": {
-        "loop": true,
-        "interval": 20,
-        "sprites": [
-            "red-virus-1",
-            "red-virus-2"
+        "numberOfLoops": -1,
+        "animationFrames": [
+            {
+                "spriteId": "red-virus-1",
+                "frameInterval": 20
+            },
+            {
+                "spriteId": "red-virus-2",
+                "frameInterval": 20
+            }
         ]
     },
 
     "yellow-virus-animation": {
-        "loop": true,
-        "interval": 20,
-        "sprites": [
-            "yellow-virus-1",
-            "yellow-virus-2"
+        "numberOfLoops": -1,
+        "animationFrames": [
+            {
+                "spriteId": "yellow-virus-1",
+                "frameInterval": 20
+            },
+            {
+                "spriteId": "yellow-virus-2",
+                "frameInterval": 20
+            }
         ]
     },
 
     "blue-virus-animation": {
-        "loop": true,
-        "interval": 20,
-        "sprites": [
-            "blue-virus-1",
-            "blue-virus-2"
+        "numberOfLoops": -1,
+        "animationFrames": [
+            {
+                "spriteId": "blue-virus-1",
+                "frameInterval": 20
+            },
+            {
+                "spriteId": "blue-virus-2",
+                "frameInterval": 20
+            }
         ]
     }
 }

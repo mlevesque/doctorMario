@@ -4,11 +4,12 @@ import spriteJson from '../data/sprites.json';
 
 import { ColorType, ObjectType } from '../model/enums.js';
 import { IGameboardObjectLookupJson, 
-         IPillSpriteColorSet, 
-         ISpriteAnimation, 
-         ISpriteAnimationJson, 
+         IPillSpriteColorSet,
          ISprite, 
-         ISpriteJson } from '../model/JsonScemas.js';
+         ISpriteJson, 
+         ISpriteAnimationSchema,
+         ISpriteAnimationJsonSchema} from '../model/JsonScemas.js';
+import { ISpriteAnimationGroup } from '../model/IGameState.js';
 
 /**
  * Returns the animation id for a virus of the given color from Json data.
@@ -32,19 +33,24 @@ export function getPillSpriteId(color: ColorType, type: ObjectType): string {
 }
 
 /**
- * Returns a sprite animation set with the given id from Json data.
- * Returns null if it can't be found in Json.
- * @param animationId 
- */
-export function getAnimationSetFromId(animationId: string): ISpriteAnimation {
-    return (animationJson as ISpriteAnimationJson)[animationId];
-}
-
-/**
- * Returns sprite data with the given sprite id from Json data.
- * Returns null if it can't be found in Json.
+ * Returns sprite data with the given sprite id.
  * @param spriteId 
  */
 export function getSpriteFromId(spriteId: string): ISprite {
     return (spriteJson as ISpriteJson)[spriteId];
+}
+
+/**
+ * Returns the sprite data for the given animation id and frame count. If not found, then
+ * returns null.
+ * @param animationId 
+ * @param frameNumber 
+ */
+export function getSpriteFromAnimation(animationId: string, frameNumber: number): ISprite {
+    const animation: ISpriteAnimationSchema = (animationJson as ISpriteAnimationJsonSchema)[animationId];
+    if (animation == null || frameNumber >= animation.animationFrames.length) {
+        return null;
+    }
+    const spriteId: string = animation.animationFrames[frameNumber].spriteId;
+    return getSpriteFromId(spriteId);
 }
