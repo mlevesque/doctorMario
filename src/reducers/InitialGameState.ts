@@ -37,6 +37,8 @@ export const InitialGameState:IGameState = {
         elapsedTime: 0,
         frameIndex: 0
     },
+    spriteAnimationGroups: {
+    },
 
     gameboardRenderCount: 0
 }

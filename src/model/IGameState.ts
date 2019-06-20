@@ -45,6 +45,17 @@ export interface IVirusGameboardAnimation {
     frameIndex: number;
 }
 
+export interface ISpriteAnimationGroup {
+    animationIdQueue: string[];
+    elapsedTime: number;
+    frameIndex: number;
+    loopCount: number;
+}
+
+export interface ISpriteAnimationStore {
+    [groupId: string]: ISpriteAnimationGroup;
+}
+
 /**
  * The full redux state.
  */
@@ -70,6 +81,7 @@ export interface IGameState {
 
     // animation
     virusGameboardAnimation: IVirusGameboardAnimation;
+    spriteAnimationGroups: ISpriteAnimationStore;
 
     // rendering
     gameboardRenderCount: number;
