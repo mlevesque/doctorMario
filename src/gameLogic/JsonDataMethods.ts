@@ -16,7 +16,7 @@ import { ISpriteAnimationGroup } from '../model/IGameState.js';
  * Returns null if color doesn't exist in Json.
  * @param color 
  */
-export function getVirusAnimationId(color: ColorType): string {
+export function getVirusAnimationGroupId(color: ColorType): string {
     return (gameboardObjectLookupJson as IGameboardObjectLookupJson).VIRUS[color];
 }
 

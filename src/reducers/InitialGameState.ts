@@ -33,11 +33,25 @@ export const InitialGameState:IGameState = {
     dropTime: 0,
     pillWorldYOffset: 0,
 
-    virusGameboardAnimation: {
-        elapsedTime: 0,
-        frameIndex: 0
-    },
     spriteAnimationGroups: {
+        ["red-virus-animation"]: {
+            animationIdQueue: ["red-virus-animation"],
+            elapsedTime: 0,
+            frameIndex: 0,
+            loopCount: 0
+        },
+        ["yellow-virus-animation"]: {
+            animationIdQueue: ["yellow-virus-animation"],
+            elapsedTime: 0,
+            frameIndex: 0,
+            loopCount: 0
+        },
+        ["blue-virus-animation"]: {
+            animationIdQueue: ["blue-virus-animation"],
+            elapsedTime: 0,
+            frameIndex: 0,
+            loopCount: 0
+        },
     },
 
     gameboardRenderCount: 0

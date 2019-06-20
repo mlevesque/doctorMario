@@ -40,10 +40,6 @@ export interface IFloatingPills {
 
 export type IControlledFloatingPill = IFloatingPills & {slideCooldown: number};
 
-export interface IVirusGameboardAnimation {
-    elapsedTime: number;
-    frameIndex: number;
-}
 
 export interface ISpriteAnimationGroup {
     animationIdQueue: string[];
@@ -80,7 +76,6 @@ export interface IGameState {
     pillWorldYOffset: number;
 
     // animation
-    virusGameboardAnimation: IVirusGameboardAnimation;
     spriteAnimationGroups: ISpriteAnimationStore;
 
     // rendering

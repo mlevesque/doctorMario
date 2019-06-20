@@ -4,11 +4,11 @@
         "animationFrames": [
             {
                 "spriteId": "red-virus-1",
-                "frameInterval": 20
+                "frameInterval": 133
             },
             {
                 "spriteId": "red-virus-2",
-                "frameInterval": 20
+                "frameInterval": 133
             }
         ]
     },
@@ -18,11 +18,11 @@
         "animationFrames": [
             {
                 "spriteId": "yellow-virus-1",
-                "frameInterval": 20
+                "frameInterval": 133
             },
             {
                 "spriteId": "yellow-virus-2",
-                "frameInterval": 20
+                "frameInterval": 133
             }
         ]
     },
@@ -32,11 +32,11 @@
         "animationFrames": [
             {
                 "spriteId": "blue-virus-1",
-                "frameInterval": 20
+                "frameInterval": 133
             },
             {
                 "spriteId": "blue-virus-2",
-                "frameInterval": 20
+                "frameInterval": 133
             }
         ]
     }

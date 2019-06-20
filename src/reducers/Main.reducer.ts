@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
 import { gameboardReducer, invalidatedPositionsReducer } from './GameBoard.reducer'
 import { IGameState } from '../model/IGameState';
-import { virusGameboardAnimationReducer } from './VirusGameboardAnimation.reducer';
 import { gameboardRenderReducer } from './render.reducer';
 import { inputsReducer, slideCooldownReducer } from './Input.reducer';
 import { flowDelayReducer, flowStateQueueReducer } from './flowState.reducer';
@@ -24,7 +23,6 @@ const gameReducers = combineReducers<IGameState>({
     dropTime: dropTimeReducer,
     pillWorldYOffset: pillWorldYOffsetReducer,
 
-    virusGameboardAnimation: virusGameboardAnimationReducer,
     spriteAnimationGroups: spriteAnimationReducer,
     
     gameboardRenderCount: gameboardRenderReducer,

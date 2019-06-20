@@ -1,16 +1,16 @@
-import { ISprite } from "../model/JsonScemas";
+import { ISprite, ISpriteAnimationFrameSchema } from "../model/JsonScemas";
 import { ColorType, ObjectType } from "../model/enums";
-import { getVirusAnimationId, getPillSpriteId, getSpriteFromAnimation, getSpriteFromId } from "./JsonDataMethods";
+import { getVirusAnimationGroupId, getPillSpriteId, getSpriteFromAnimation, getSpriteFromId } from "./JsonDataMethods";
 import { IGridSpace, IGameBoard } from "../model/IGameBoard";
 import { GRID_SIZE } from "../constants";
-import { IPill, IGameObject, IGridPos } from "../model/IGameState";
+import { IPill, IGameObject, IGridPos, ISpriteAnimationStore, ISpriteAnimationGroup } from "../model/IGameState";
 
 
 export interface IRenderGameParams {
     gameboard: IGameBoard;
     pills: IPill[];
     pillVerticalOffset: number;
-    virusAnimationFrame: number;
+    animationGroups: ISpriteAnimationStore;
 }
 
 
@@ -19,8 +19,12 @@ export interface IRenderGameParams {
  * @param color 
  * @param frameIndex 
  */
-function getSpriteForVirus(color: ColorType, frameIndex: number): ISprite {
-    return getSpriteFromAnimation(getVirusAnimationId(color), frameIndex);
+function getSpriteForVirus(color: ColorType, animationGroups: ISpriteAnimationStore): ISprite {
+    const group: ISpriteAnimationGroup = animationGroups[getVirusAnimationGroupId(color)];
+    if (group == null || group.animationIdQueue.length == 0) {
+        return null;
+    }
+    return getSpriteFromAnimation(group.animationIdQueue[0], group.frameIndex);
 }
 
 /**
@@ -43,9 +47,9 @@ function renderGameboard(   ctx: CanvasRenderingContext2D,
                             spriteSheet: HTMLImageElement,
                             params: IRenderGameParams) {
     // get sprites for viruses
-    let redVirus: ISprite = getSpriteForVirus(ColorType.RED, params.virusAnimationFrame);
-    let yellowVirus: ISprite = getSpriteForVirus(ColorType.YELLOW, params.virusAnimationFrame);
-    let blueVirus: ISprite = getSpriteForVirus(ColorType.BLUE, params.virusAnimationFrame);
+    let redVirus: ISprite = getSpriteForVirus(ColorType.RED, params.animationGroups);
+    let yellowVirus: ISprite = getSpriteForVirus(ColorType.YELLOW, params.animationGroups);
+    let blueVirus: ISprite = getSpriteForVirus(ColorType.BLUE, params.animationGroups);
 
     // render grid objects
     params.gameboard.grid.forEach((row: IGridSpace[], y:number) => {

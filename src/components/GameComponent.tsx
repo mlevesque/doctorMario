@@ -20,7 +20,7 @@ class GameComponent extends React.Component<IGameState> {
                 return state.floatingPills.pills[id];
             }),
             pillVerticalOffset: state.pillWorldYOffset,
-            virusAnimationFrame: state.virusGameboardAnimation.frameIndex,
+            animationGroups: state.spriteAnimationGroups
         }
     }
 
