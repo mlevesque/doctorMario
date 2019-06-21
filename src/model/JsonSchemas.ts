@@ -67,12 +67,3 @@ export interface ISprite {
 export interface ISpriteJson {
     [spriteId: string]: ISprite;
 }
-
-
-/////////////////////////////////////////////////////////////////////////
-// CONFIG JSON
-export interface IConfigJson {
-    acceleratedDropInterval: number;
-    destroyDelay: number;
-    debrisDropInterval: number;
-}

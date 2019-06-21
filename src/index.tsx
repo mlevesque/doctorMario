@@ -19,7 +19,7 @@ import { FlowState } from "./states/stateMappings";
 const sagaMiddleware = createSagaMiddleware();
 const store: Store = createStore(gameReducers, InitialGameState, applyMiddleware(sagaMiddleware));
 
-let data: Table<ColorType> = buildVirusGameboard(8, 16, 10, 10, 10);
+let data: Table<ColorType> = buildVirusGameboard(8, 16, 10, 10, 10, 5);
 store.dispatch(createBuildGameboardAction(data));
 //store.dispatch(createFloatingPillAddPillAction(generateFloatingPill(store.getState().gameboard)));
 

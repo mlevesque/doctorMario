@@ -1,4 +1,4 @@
-import { ISprite } from "../model/JsonScemas";
+import { ISprite } from "../model/JsonSchemas";
 import { ColorType, ObjectType } from "../model/enums";
 import { getVirusAnimationGroupId, getPillSpriteId, getSpriteFromAnimation, getSpriteFromId } from "./JsonDataMethods";
 import { IGridSpace, IGameBoard } from "../model/IGameBoard";

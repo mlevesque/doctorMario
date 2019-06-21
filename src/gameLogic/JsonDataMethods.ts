@@ -8,7 +8,7 @@ import { IGameboardObjectLookupJson,
          ISprite, 
          ISpriteJson, 
          ISpriteAnimationSchema,
-         ISpriteAnimationJsonSchema} from '../model/JsonScemas.js';
+         ISpriteAnimationJsonSchema} from '../model/JsonSchemas.js';
 import { ISpriteAnimationGroup } from '../model/IGameState.js';
 
 /**

@@ -2,5 +2,7 @@
     "gridSpaceSize": 32,
     "acceleratedDropInterval": 40,
     "destroyDelay": 800,
-    "debrisDropInterval": 200
+    "debrisDropInterval": 200,
+    "propagationFailureLimit": 5,
+    "propagationPositionFindLimit": 10
 }

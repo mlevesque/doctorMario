@@ -3,7 +3,7 @@ import { SpriteAnimationAction, createSetSpriteAnimationGroupAction } from "../a
 import { AnyAction } from "redux";
 import { ISpriteAnimationStore, ISpriteAnimationGroup } from "../model/IGameState";
 import { getSpriteAnimationGroupsState } from "./selectHelpers";
-import { ISpriteAnimationSchema, ISpriteAnimationFrameSchema } from "../model/JsonScemas";
+import { ISpriteAnimationSchema, ISpriteAnimationFrameSchema } from "../model/JsonSchemas";
 import { getAnimationFromId } from "../gameLogic/JsonDataMethods";
 import { GameAction } from "../actions/Game.actions";
 

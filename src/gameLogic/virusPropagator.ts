@@ -1,20 +1,17 @@
 import { Table } from "../model/Table";
 import { ColorType } from "../model/enums";
 import { IGridPos } from "../model/IGameState";
-
-const FAIL_LIMIT: number = 5;
-const NUMBER_OF_RESTRICTED_ROWS: number = 3;
-const MAX_ATTEMPTS: number = 20;
+import configJson from "../data/config.json";
 
 /**
  * Masks used for indicating where a given space is restricted to a set of colors.
  */
 enum ColorMask {
-    CLEAR = 0,
-    RED = 1,
-    YELLOW = 2,
-    BLUE = 4,
-    ALL = 7
+    CLEAR   = 0b000,  
+    RED     = 0b100,
+    YELLOW  = 0b010,
+    BLUE    = 0b001,
+    ALL     = 0b111
 }
 
 interface IVirusDataPair {
@@ -22,27 +19,28 @@ interface IVirusDataPair {
     colorMask: ColorMask;
 }
 
-function randomlyChooseGridSpace(width: number, height: number): IGridPos {
+function randomlyChooseGridSpace(width: number, height: number, virusCeiling: number): IGridPos {
     return {
         x: Math.floor(Math.random() * width),
-        y: NUMBER_OF_RESTRICTED_ROWS + Math.floor(Math.random() * (height - NUMBER_OF_RESTRICTED_ROWS))
+        y: virusCeiling + Math.floor(Math.random() * (height - virusCeiling))
     }
 }
 
-function isAvailable(maskGrid: Table<number>, width: number, height: number, pos: IGridPos): boolean {
+function isAvailable(maskGrid: Table<number>, width: number, height: number, pos: IGridPos, virusCeiling: number): boolean {
     return pos.x >= 0
-        && pos.y > NUMBER_OF_RESTRICTED_ROWS
+        && pos.y > virusCeiling
         && pos.x < width
         && pos.y < height
         && maskGrid.getValue(pos.x, pos.y) != ColorMask.ALL;
 }
 
-function findAvailable(maskGrid: Table<number>, width: number, height: number, startPos: IGridPos): IGridPos {
+function findAvailable(maskGrid: Table<number>, width: number, height: number, startPos: IGridPos, virusCeiling: number): IGridPos {
     let potentialPos: IGridPos = Object.assign({}, startPos);
     let step: number = 1;
     let direction: number = 0;
     let attempts: number = 0;
-    while (attempts < MAX_ATTEMPTS && !isAvailable(maskGrid, width, height, potentialPos)) {
+    while (attempts < configJson.propagationPositionFindLimit 
+        && !isAvailable(maskGrid, width, height, potentialPos, virusCeiling)) {
         potentialPos = Object.assign({}, startPos);
         switch (direction) {
             case 0:
@@ -68,7 +66,7 @@ function findAvailable(maskGrid: Table<number>, width: number, height: number, s
         }
         attempts++;
     }
-    return (attempts >= MAX_ATTEMPTS) ? null : potentialPos;
+    return (attempts >= configJson.propagationPositionFindLimit) ? null : potentialPos;
 }
 
 function chooseVirus(mask: number): IVirusDataPair {
@@ -87,7 +85,54 @@ function chooseVirus(mask: number): IVirusDataPair {
     return list[index];
 }
 
-export function buildVirusGameboard(width: number, height: number, redCount: number, yellowCount: number, blueCount: number): Table<ColorType> {
+
+export interface IAddVirusResult {
+    successful: boolean;
+    position?: IGridPos;
+    color?: ColorType;
+}
+
+export function attemptToAddVirus(maskBoard: Table<number>, considerRed: boolean, considerYellow: boolean, considerBlue: boolean, virusCeiling: number): IAddVirusResult {
+    // randomly choose position position
+    const width: number = maskBoard.width;
+    const height: number = maskBoard.height;
+    let pos: IGridPos = randomlyChooseGridSpace(width, height, virusCeiling);
+    pos = findAvailable(maskBoard, width, height, pos, virusCeiling);
+    if (pos == null) {
+        return {
+            successful: false
+        };
+    }
+
+    // choose virus
+    let mask: number = maskBoard.getValue(pos.x, pos.y);
+    mask |= considerRed ? 0 : ColorMask.RED;
+    mask |= considerYellow ? 0 : ColorMask.YELLOW;
+    mask |= considerBlue ? 0 : ColorMask.BLUE;
+    let virusData: IVirusDataPair = chooseVirus(mask);
+    if (virusData == null) {
+        return {
+            successful: false,
+            position: pos
+        };
+    }
+
+    // set masks around virus
+    maskBoard.setValue(pos.x, pos.y, ColorMask.ALL);
+    maskBoard.setValue(pos.x-2, pos.y, maskBoard.getValue(pos.x-2, pos.y) | virusData.colorMask);
+    maskBoard.setValue(pos.x+2, pos.y, maskBoard.getValue(pos.x+2, pos.y) | virusData.colorMask);
+    maskBoard.setValue(pos.x, pos.y-2, maskBoard.getValue(pos.x, pos.y-2) | virusData.colorMask);
+    maskBoard.setValue(pos.x, pos.y+2, maskBoard.getValue(pos.x, pos.y+2) | virusData.colorMask);
+
+    // success
+    return {
+        successful: true,
+        position: pos,
+        color: virusData.color
+    };
+}
+
+export function buildVirusGameboard(width: number, height: number, redCount: number, yellowCount: number, blueCount: number, virusCeiling: number): Table<ColorType> {
     let remainingRed: number = Math.max(0, redCount);
     let remainingYellow: number = Math.max(0, yellowCount);
     let remainingBlue: number = Math.max(0, blueCount);
@@ -99,41 +144,30 @@ export function buildVirusGameboard(width: number, height: number, redCount: num
     let failCount: number = 0;
 
     // loop until we've added all the viruses that we can
-    while ((remainingRed > 0 || remainingYellow > 0 || remainingBlue > 0) && failCount < FAIL_LIMIT) {
+    while ((remainingRed > 0 || remainingYellow > 0 || remainingBlue > 0) && failCount < configJson.propagationFailureLimit) {
+        // attempt to add virus
+        let addVirusResult: IAddVirusResult = attemptToAddVirus(
+                                                    maskBoard, 
+                                                    remainingRed > 0,
+                                                    remainingYellow > 0,
+                                                    remainingBlue > 0,
+                                                    virusCeiling);
+        if (addVirusResult.successful) {
+            // decrement virus count
+            switch(addVirusResult.color) {
+                case ColorType.RED: remainingRed--; break;
+                case ColorType.YELLOW: remainingYellow--; break;
+                case ColorType.BLUE: remainingBlue--; break;
+            }
 
-        // get position
-        let pos: IGridPos = randomlyChooseGridSpace(width, height);
-        pos = findAvailable(maskBoard, width, height, pos);
-        if (pos == null) {
+            // add virus to gameboard
+            gameboard.setValue(addVirusResult.position.x, addVirusResult.position.y, addVirusResult.color);
+        }
+
+        // increment failure count if unsuccessful
+        else {
             failCount++;
-            continue;
         }
-
-        // choose virus
-        let mask: number = maskBoard.getValue(pos.x, pos.y);
-        mask |= remainingRed > 0 ? 0 : ColorMask.RED;
-        mask |= remainingYellow > 0 ? 0 : ColorMask.YELLOW;
-        mask |= remainingBlue > 0 ? 0 : ColorMask.BLUE;
-        let virusData: IVirusDataPair = chooseVirus(mask);
-        if (virusData == null) {
-            failCount++;
-            continue;
-        }
-
-        // add virus
-        gameboard.setValue(pos.x, pos.y, virusData.color);
-        switch(virusData.color) {
-            case ColorType.RED: remainingRed--; break;
-            case ColorType.YELLOW: remainingYellow--; break;
-            case ColorType.BLUE: remainingBlue--; break;
-        }
-
-        // set masks around virus
-        maskBoard.setValue(pos.x, pos.y, ColorMask.ALL);
-        maskBoard.setValue(pos.x-2, pos.y, maskBoard.getValue(pos.x-2, pos.y) | virusData.colorMask);
-        maskBoard.setValue(pos.x+2, pos.y, maskBoard.getValue(pos.x+2, pos.y) | virusData.colorMask);
-        maskBoard.setValue(pos.x, pos.y-2, maskBoard.getValue(pos.x, pos.y-2) | virusData.colorMask);
-        maskBoard.setValue(pos.x, pos.y+2, maskBoard.getValue(pos.x, pos.y+2) | virusData.colorMask);
     }
 
     return gameboard;
