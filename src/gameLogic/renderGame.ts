@@ -1,9 +1,9 @@
-import { ISprite, ISpriteAnimationFrameSchema } from "../model/JsonScemas";
+import { ISprite } from "../model/JsonScemas";
 import { ColorType, ObjectType } from "../model/enums";
 import { getVirusAnimationGroupId, getPillSpriteId, getSpriteFromAnimation, getSpriteFromId } from "./JsonDataMethods";
 import { IGridSpace, IGameBoard } from "../model/IGameBoard";
-import { GRID_SIZE } from "../constants";
 import { IPill, IGameObject, IGridPos, ISpriteAnimationStore, ISpriteAnimationGroup } from "../model/IGameState";
+import configJson from "../data/config.json";
 
 
 export interface IRenderGameParams {
@@ -59,8 +59,8 @@ function renderGameboard(   ctx: CanvasRenderingContext2D,
                 return;
             }
 
-            let posX: number = x * GRID_SIZE;
-            let posY: number = y * GRID_SIZE;
+            let posX: number = x * configJson.gridSpaceSize;
+            let posY: number = y * configJson.gridSpaceSize;
 
             // render virus
             if (space.type == ObjectType.VIRUS) {
@@ -95,8 +95,8 @@ function renderFloatingPill(ctx: CanvasRenderingContext2D,
     pill.parts.forEach((part: IGameObject) => {
         let sprite: ISprite = getSpriteFromId(getPillSpriteId(part.color, part.type));
         let pos: IGridPos = {
-            x: (part.position.x + pill.position.x) * GRID_SIZE,
-            y: (part.position.y + pill.position.y) * GRID_SIZE + yOffset
+            x: (part.position.x + pill.position.x) * configJson.gridSpaceSize,
+            y: (part.position.y + pill.position.y) * configJson.gridSpaceSize + yOffset
         };
         renderSprite(ctx, spriteSheet, sprite, pos.x, pos.y);
     });
