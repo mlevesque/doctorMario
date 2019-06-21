@@ -6,11 +6,14 @@ import { IPill, IGameObject, IGridPos, ISpriteAnimationStore, ISpriteAnimationGr
 import configJson from "../data/config.json";
 
 
-export interface IRenderGameParams {
+export interface IGameboardRenderProps {
     gameboard: IGameBoard;
     pills: IPill[];
     pillVerticalOffset: number;
     animationGroups: ISpriteAnimationStore;
+    renderNumber: number;
+    canvasWidth: number;
+    canvasHeight: number;
 }
 
 
@@ -45,7 +48,7 @@ function renderSprite(  ctx: CanvasRenderingContext2D,
 
 function renderGameboard(   ctx: CanvasRenderingContext2D,
                             spriteSheet: HTMLImageElement,
-                            params: IRenderGameParams) {
+                            params: IGameboardRenderProps) {
     // get sprites for viruses
     let redVirus: ISprite = getSpriteForVirus(ColorType.RED, params.animationGroups);
     let yellowVirus: ISprite = getSpriteForVirus(ColorType.YELLOW, params.animationGroups);
@@ -110,7 +113,7 @@ function renderFloatingPill(ctx: CanvasRenderingContext2D,
  */
 export function renderGame( ctx: CanvasRenderingContext2D,
                             spriteSheet: HTMLImageElement,
-                            params: IRenderGameParams): void {
+                            params: IGameboardRenderProps): void {
 
     ctx.save();
 

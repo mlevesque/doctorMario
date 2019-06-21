@@ -1,37 +1,42 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import gameboardObjectsImage from "../assets/gameboard-objects.gif"
-import { IGameState, IPill, IGridPos } from "../model/IGameState";
-import { renderGame, IRenderGameParams } from "../gameLogic/renderGame";
+import { IGameState, IPill, IGridPos, ISpriteAnimationStore } from "../model/IGameState";
+import { renderGame, IGameboardRenderProps } from "../gameLogic/renderGame";
+import configJson from "../data/config.json";
 
-const mapStateToProps = (state: IGameState): IGameState => {
-    return state;
+const mapStateToProps = (state: IGameState): IGameboardRenderProps => {
+    return {
+        gameboard: state.gameboard,
+        pills: state.floatingPills.pillIds.map<IPill>((id: string) => {
+            return state.floatingPills.pills[id];
+        }),
+        pillVerticalOffset: state.pillWorldYOffset,
+        animationGroups: state.spriteAnimationGroups,
+        renderNumber: state.gameboardRenderCount,
+        canvasWidth: state.gameboard.width * configJson.gridSpaceSize,
+        canvasHeight: state.gameboard.height * configJson.gridSpaceSize
+    }
 }
 
-class GameComponent extends React.Component<IGameState> {
+class GameComponent extends React.Component<IGameboardRenderProps> {
 
     private renderContext: CanvasRenderingContext2D;
     private spriteSheet: HTMLImageElement;
-
-    mapStateToRenderParams(state: IGameState): IRenderGameParams {
-        return {
-            gameboard: state.gameboard,
-            pills: state.floatingPills.pillIds.map<IPill>((id: string) => {
-                return state.floatingPills.pills[id];
-            }),
-            pillVerticalOffset: state.pillWorldYOffset,
-            animationGroups: state.spriteAnimationGroups
-        }
-    }
 
     /**
      * We don't want to re-render the components. The gameloop will call to render the canvas instead.
      * @param nextProps 
      * @param nextState 
      */
-    shouldComponentUpdate(nextProps: any, nextState: any): boolean {
-        renderGame(this.renderContext, this.spriteSheet, this.mapStateToRenderParams(this.props));
-        return false;
+    shouldComponentUpdate(nextProps: IGameboardRenderProps, nextState: any): boolean {
+        if (nextProps.canvasWidth != this.props.canvasWidth || nextProps.canvasHeight != this.props.canvasHeight) {
+            return true;
+        }
+        if (nextProps.renderNumber != this.props.renderNumber) {
+            renderGame(this.renderContext, this.spriteSheet, this.props);
+            return false;
+        }
     }
 
     /**
@@ -50,12 +55,12 @@ class GameComponent extends React.Component<IGameState> {
         return (
             <div>
                 <img id="spriteSheet" src={gameboardObjectsImage} hidden={true} />
-                <canvas id="gameCanvas" width={640} height={640} />
+                <canvas id="gameCanvas" width={this.props.canvasWidth} height={this.props.canvasHeight} />
             </div>
         )
     }
 }
 
-export const Game = connect<IGameState>(
+export const Game = connect<IGameboardRenderProps>(
     mapStateToProps
 )(GameComponent);
