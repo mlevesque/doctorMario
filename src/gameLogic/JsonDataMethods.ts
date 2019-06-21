@@ -1,6 +1,7 @@
 import gameboardObjectLookupJson from '../data/objectLookup.json';
 import animationJson from '../data/animations.json';
 import spriteJson from '../data/sprites.json';
+import levelsJson from "../data/levels.json";
 
 import { ColorType, ObjectType } from '../model/enums.js';
 import { IGameboardObjectLookupJson, 
@@ -8,7 +9,9 @@ import { IGameboardObjectLookupJson,
          ISprite, 
          ISpriteJson, 
          ISpriteAnimationSchema,
-         ISpriteAnimationJsonSchema} from '../model/JsonSchemas.js';
+         ISpriteAnimationJsonSchema,
+         ILevelSchema,
+         ILevelsJsonSchema} from '../model/JsonSchemas.js';
 import { ISpriteAnimationGroup } from '../model/IGameState.js';
 
 /**
@@ -61,4 +64,17 @@ export function getSpriteFromAnimation(animationId: string, frameNumber: number)
     }
     const spriteId: string = animation.animationFrames[frameNumber].spriteId;
     return getSpriteFromId(spriteId);
+}
+
+/**
+ * Returns level json data for the given level. If level is negative, this returns level 0 data.
+ * If level is above 20, then this returns level 20 data.
+ * @param level 
+ */
+export function getLevelJsonData(level: number): ILevelSchema {
+    // cap level
+    let lev: number = Math.max(0, level);
+    lev = Math.min(20, lev);
+
+    return (levelsJson as ILevelsJsonSchema)[lev.toString()] as ILevelSchema;
 }

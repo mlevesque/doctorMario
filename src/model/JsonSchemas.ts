@@ -67,3 +67,17 @@ export interface ISprite {
 export interface ISpriteJson {
     [spriteId: string]: ISprite;
 }
+
+
+
+/////////////////////////////////////////////////////////////////////////
+// LEVELS JSON
+export interface ILevelSchema {
+    redCount: number;
+    yellowCount: number;
+    blueCount: number;
+    virusCeiling: number;
+}
+export interface ILevelsJsonSchema {
+    [levelKey: string]: ILevelSchema;
+}

@@ -1,5 +1,5 @@
 import { IGameState } from "../model/IGameState";
-import { ColorType, ObjectType, InputType } from "../model/enums";
+import { ColorType, ObjectType, InputType, GameSpeed } from "../model/enums";
 
 export const InitialGameState:IGameState = {
     flowStateQueue: [null],
@@ -51,6 +51,17 @@ export const InitialGameState:IGameState = {
             loopCount: 0
         },
     },
+
+    levelData: {
+        level: 0,
+        gameSpeed: GameSpeed.LOW,
+        remainingCounts: {
+            red: 2,
+            yellow: 1,
+            blue: 1
+        }
+    },
+    score: 0,
 
     gameboardRenderCount: 0
 }

@@ -6,6 +6,8 @@ import { inputsReducer, slideCooldownReducer } from './Input.reducer';
 import { flowDelayReducer, flowStateQueueReducer } from './flowState.reducer';
 import { floatingPillsReducer, currentDropIntervalReducer, regularDropIntervalReducer, pillWorldYOffsetReducer, dropTimeReducer } from './floatingPill.reducer';
 import { spriteAnimationReducer } from './spriteAnimation.reducer';
+import { levelReducer } from './level.reducer';
+import { scoreReducer } from './score.reducer';
 
 const gameReducers = combineReducers<IGameState>({
     flowStateQueue: flowStateQueueReducer,
@@ -24,6 +26,9 @@ const gameReducers = combineReducers<IGameState>({
     pillWorldYOffset: pillWorldYOffsetReducer,
 
     spriteAnimationGroups: spriteAnimationReducer,
+
+    levelData: levelReducer,
+    score: scoreReducer,
     
     gameboardRenderCount: gameboardRenderReducer,
 });

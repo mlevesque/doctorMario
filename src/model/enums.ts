@@ -57,3 +57,9 @@ export enum MatchDirection {
     VERTICAL = 0,
     HORIZONTAL
 }
+
+export enum GameSpeed {
+    LOW = 0,
+    MED,
+    HIGH
+}

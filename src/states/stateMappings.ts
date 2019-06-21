@@ -3,12 +3,14 @@ import { startStart } from "./start.state";
 import { throwInPillStart } from "./throwInPill.state";
 import { handleMatchesStart, handleMatchesUpdate, handleMatchesEnd } from "./handleMatches.state";
 import { debrisFallUpdate, debrisFallStart } from "./debrisFall.state";
+import { propagateVirusesStart, propagateVirusesUpdate } from "./virusPropagate.state";
 
 /**
  * Values for all game flow states during gameplay.
  */
 export enum FlowState {
     START = 0,
+    PROPAGATE_VIRUSES,      // Viruses added in bottle
     THROW_IN_PILL,          // Mario throws in a new pill
     CONTROL_PILL,           // Player moves and places pill
     PLACING_PILL,           // Player controlled pill is in process of being placed
@@ -30,6 +32,11 @@ export const FLOW_STATES: IFlowStateMappings = {
     [FlowState.START]: {
         onStart: startStart,
         onUpdate: null,
+        onEnd: null
+    },
+    [FlowState.PROPAGATE_VIRUSES]: {
+        onStart: propagateVirusesStart,
+        onUpdate: propagateVirusesUpdate,
         onEnd: null
     },
     [FlowState.THROW_IN_PILL]: {

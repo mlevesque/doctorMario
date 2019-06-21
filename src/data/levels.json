@@ -1,0 +1,148 @@
+{
+    "0": {
+        "redCount":     1,
+        "yellowCount":  1,
+        "blueCount":    2,
+        "virusCeiling": 6
+    },
+
+    "1": {
+        "redCount":     2,
+        "yellowCount":  3,
+        "blueCount":    3,
+        "virusCeiling": 6
+    },
+
+    "2": {
+        "redCount":     5,
+        "yellowCount":  4,
+        "blueCount":    3,
+        "virusCeiling": 6
+    },
+
+    "3": {
+        "redCount":     6,
+        "yellowCount":  6,
+        "blueCount":    4,
+        "virusCeiling": 6
+    },
+
+    "4": {
+        "redCount":     6,
+        "yellowCount":  8,
+        "blueCount":    6,
+        "virusCeiling": 6
+    },
+
+    "5": {
+        "redCount":     8,
+        "yellowCount":  7,
+        "blueCount":    9,
+        "virusCeiling": 6
+    },
+
+    "6": {
+        "redCount":     9,
+        "yellowCount":  9,
+        "blueCount":    10,
+        "virusCeiling": 6
+    },
+
+    "7": {
+        "redCount":     11,
+        "yellowCount":  10,
+        "blueCount":    11,
+        "virusCeiling": 6
+    },
+
+    "8": {
+        "redCount":     10,
+        "yellowCount":  12,
+        "blueCount":    14,
+        "virusCeiling": 6
+    },
+
+    "9": {
+        "redCount":     13,
+        "yellowCount":  16,
+        "blueCount":    11,
+        "virusCeiling": 6
+    },
+
+    "10": {
+        "redCount":     17,
+        "yellowCount":  11,
+        "blueCount":    16,
+        "virusCeiling": 6
+    },
+
+    "11": {
+        "redCount":     16,
+        "yellowCount":  19,
+        "blueCount":    13,
+        "virusCeiling": 6
+    },
+
+    "12": {
+        "redCount":     15,
+        "yellowCount":  20,
+        "blueCount":    17,
+        "virusCeiling": 6
+    },
+
+    "13": {
+        "redCount":     20,
+        "yellowCount":  19,
+        "blueCount":    17,
+        "virusCeiling": 6
+    },
+
+    "14": {
+        "redCount":     22,
+        "yellowCount":  19,
+        "blueCount":    19,
+        "virusCeiling": 6
+    },
+
+    "15": {
+        "redCount":     22,
+        "yellowCount":  18,
+        "blueCount":    24,
+        "virusCeiling": 5
+    },
+
+    "16": {
+        "redCount":     20,
+        "yellowCount":  26,
+        "blueCount":    22,
+        "virusCeiling": 5
+    },
+
+    "17": {
+        "redCount":     22,
+        "yellowCount":  25,
+        "blueCount":    25,
+        "virusCeiling": 4
+    },
+
+    "18": {
+        "redCount":     29,
+        "yellowCount":  22,
+        "blueCount":    25,
+        "virusCeiling": 4
+    },
+
+    "19": {
+        "redCount":     29,
+        "yellowCount":  27,
+        "blueCount":    24,
+        "virusCeiling": 3
+    },
+
+    "20": {
+        "redCount":     29,
+        "yellowCount":  30,
+        "blueCount":    25,
+        "virusCeiling": 3
+    }
+}

@@ -1,5 +1,5 @@
 import { IGameBoard } from "./IGameBoard";
-import { ColorType, ObjectType, PillRotation } from "./enums";
+import { ColorType, ObjectType, PillRotation, GameSpeed } from "./enums";
 import { IInputActions } from "./IInputActions";
 import { FlowState } from "../states/stateMappings";
 
@@ -52,6 +52,17 @@ export interface ISpriteAnimationStore {
     [groupId: string]: ISpriteAnimationGroup;
 }
 
+export interface IVirusCounts {
+    red: number;
+    yellow: number;
+    blue: number;
+}
+export interface ILevelData {
+    level: number;
+    gameSpeed: GameSpeed;
+    remainingCounts: IVirusCounts;
+}
+
 /**
  * The full redux state.
  */
@@ -77,6 +88,10 @@ export interface IGameState {
 
     // animation
     spriteAnimationGroups: ISpriteAnimationStore;
+
+    // level
+    levelData: ILevelData;
+    score: number;
 
     // rendering
     gameboardRenderCount: number;

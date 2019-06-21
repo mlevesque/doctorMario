@@ -1,4 +1,4 @@
-import { IGameState, IFloatingPills, IGridPos, ISpriteAnimationStore } from "../model/IGameState";
+import { IGameState, IFloatingPills, IGridPos, ISpriteAnimationStore, ILevelData } from "../model/IGameState";
 import { IGameBoard } from "../model/IGameBoard";
 import { IInputActions } from "../model/IInputActions";
 import { FlowState } from "../states/stateMappings";
@@ -18,3 +18,6 @@ export function getRegularDropIntervalState(state: IGameState): number { return 
 export function getDropTimeState(state: IGameState): number { return state.dropTime; }
 
 export function getSpriteAnimationGroupsState(state: IGameState): ISpriteAnimationStore { return state.spriteAnimationGroups; }
+
+export function getLevelDataState(state: IGameState): ILevelData { return state.levelData; }
+export function getScoreState(state: IGameState): number { return state.score; }
