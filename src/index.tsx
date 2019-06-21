@@ -2,20 +2,18 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { createStore, Store, applyMiddleware } from "redux";
-import { Game } from "./components/GameComponent";
+import { Gameboard } from "./components/Gameboard";
 import { InitialGameState } from "./reducers/InitialGameState";
 import { createBuildGameboardAction } from "./actions/GameBoard.actions";
 import { Table } from "./model/Table";
 import { buildVirusGameboard } from "./gameLogic/virusPropagator";
 import gameReducers from "./reducers/Main.reducer";
 import { ColorType, InputType } from "./model/enums";
-import { createFloatingPillAddPillAction } from "./actions/FloatingPill.actions";
-import { generateFloatingPill } from "./gameLogic/generatePill";
 import { createGameUpdateAction } from "./actions/Game.actions";
 import createSagaMiddleware from "@redux-saga/core";
-import { mainUpdateSaga, rootSaga } from "./sagas/updateGame";
+import { rootSaga } from "./sagas/updateGame";
 import { createSetInputAction } from "./actions/Input.actions";
-import { createQueueFlowStateAction, FlowStateAction, createNextFlowStateAction } from "./actions/flowState.actions";
+import { createQueueFlowStateAction, createNextFlowStateAction } from "./actions/flowState.actions";
 import { FlowState } from "./states/stateMappings";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -28,7 +26,7 @@ store.dispatch(createBuildGameboardAction(data));
 
 ReactDOM.render(
     <Provider store={store}>
-        <Game />
+        <Gameboard />
     </Provider>,
     document.getElementById("main")
 );

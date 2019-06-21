@@ -19,13 +19,14 @@ const mapStateToProps = (state: IGameState): IGameboardRenderProps => {
     }
 }
 
-class GameComponent extends React.Component<IGameboardRenderProps> {
+class GameboardComponent extends React.Component<IGameboardRenderProps> {
 
     private renderContext: CanvasRenderingContext2D;
     private spriteSheet: HTMLImageElement;
 
     /**
-     * We don't want to re-render the components. The gameloop will call to render the canvas instead.
+     * If the render number is different, then render on the canvas only. If the gameboard size has
+     * changed, then we render all the elements.
      * @param nextProps 
      * @param nextState 
      */
@@ -61,6 +62,6 @@ class GameComponent extends React.Component<IGameboardRenderProps> {
     }
 }
 
-export const Game = connect<IGameboardRenderProps>(
+export const Gameboard = connect<IGameboardRenderProps>(
     mapStateToProps
-)(GameComponent);
+)(GameboardComponent);
