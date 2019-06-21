@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import gameboardObjectsImage from "../assets/gameboard-objects.gif"
-import { IGameState, IPill, IGridPos, ISpriteAnimationStore } from "../model/IGameState";
+import { IGameState, IPill } from "../model/IGameState";
 import { renderGame, IGameboardRenderProps } from "../gameLogic/renderGame";
 import configJson from "../data/config.json";
 
@@ -55,7 +54,6 @@ class GameboardComponent extends React.Component<IGameboardRenderProps> {
     render() {
         return (
             <div>
-                <img id="spriteSheet" src={gameboardObjectsImage} hidden={true} />
                 <canvas id="gameCanvas" width={this.props.canvasWidth} height={this.props.canvasHeight} />
             </div>
         )

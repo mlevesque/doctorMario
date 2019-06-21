@@ -15,6 +15,7 @@ import { rootSaga } from "./sagas/updateGame";
 import { createSetInputAction } from "./actions/Input.actions";
 import { createQueueFlowStateAction, createNextFlowStateAction } from "./actions/flowState.actions";
 import { FlowState } from "./states/stateMappings";
+import MainGameComponent from "./components/MainGame";
 
 const sagaMiddleware = createSagaMiddleware();
 const store: Store = createStore(gameReducers, InitialGameState, applyMiddleware(sagaMiddleware));
@@ -26,7 +27,7 @@ store.dispatch(createBuildGameboardAction(data));
 
 ReactDOM.render(
     <Provider store={store}>
-        <Gameboard />
+        <MainGameComponent />
     </Provider>,
     document.getElementById("main")
 );
