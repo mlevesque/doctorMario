@@ -17,8 +17,6 @@ export const InitialGameState:IGameState = {
         width: 5,
         height: 5,
         grid: [
-            [null, {color: ColorType.RED, type: ObjectType.VIRUS}],
-            [null, null, {color: ColorType.YELLOW, type: ObjectType.VIRUS}, {color: ColorType.BLUE, type: ObjectType.VIRUS}]
         ]
     },
     invalidatedPositions: [],
