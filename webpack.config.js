@@ -8,11 +8,11 @@ module.exports = {
     },
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    //devtool: "source-map",
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json", ".css"]
     },
 
     module: {
@@ -32,6 +32,11 @@ module.exports = {
                         options: {},
                     },
                 ],
+            },
+
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
             },
         ]
     },

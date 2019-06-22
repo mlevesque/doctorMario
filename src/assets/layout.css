@@ -1,0 +1,16 @@
+.bottle {
+    background-image: url("spritesheet.gif");
+    background-position: -320px 0px;
+    width: 320px;
+    height: 704px;
+}
+
+.gameboard {
+    position: relative;
+    left: 32px;
+    top: 160px;
+}
+
+body {
+    background-color: black;
+}

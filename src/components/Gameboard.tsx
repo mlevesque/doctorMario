@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { IGameState, IPill } from "../model/IGameState";
 import { renderGame, IGameboardRenderProps } from "../gameLogic/renderGame";
 import configJson from "../data/config.json";
+import "../assets/layout.css";
 
 const mapStateToProps = (state: IGameState): IGameboardRenderProps => {
     return {
@@ -40,10 +41,10 @@ class GameboardComponent extends React.Component<IGameboardRenderProps> {
     }
 
     /**
-     * When the components mount, begin the game loop.
+     * When the components mount, keep track of canvas context and spritesheet.
      */
     componentDidMount() {
-        let canvas: HTMLCanvasElement = document.getElementById("gameCanvas") as HTMLCanvasElement;
+        let canvas: HTMLCanvasElement = document.getElementById("gameboard") as HTMLCanvasElement;
         this.renderContext = canvas.getContext("2d");
         this.spriteSheet = document.getElementById("spriteSheet") as HTMLImageElement;
     }
@@ -53,8 +54,11 @@ class GameboardComponent extends React.Component<IGameboardRenderProps> {
      */
     render() {
         return (
-            <div>
-                <canvas id="gameCanvas" width={this.props.canvasWidth} height={this.props.canvasHeight} />
+            <div className="bottle">
+                <canvas id="gameboard" 
+                        className="gameboard" 
+                        width={this.props.canvasWidth} 
+                        height={this.props.canvasHeight} />
             </div>
         )
     }
