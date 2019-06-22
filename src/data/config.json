@@ -2,10 +2,14 @@
     "gridWidth": 8,
     "gridHeight": 16,
     "gridSpaceSize": 32,
+
     "virusPropagationPerFrame": 2,
-    "acceleratedDropInterval": 40,
-    "destroyDelay": 800,
-    "debrisDropInterval": 200,
     "propagationFailureLimit": 5,
-    "propagationPositionFindLimit": 10
+    "propagationPositionFindLimit": 10,
+
+    "acceleratedDropInterval": 40,
+    "debrisDropInterval": 200,
+
+    "destroyDelay": 800,
+    "matchDestroyRowsInterval": 20
 }
